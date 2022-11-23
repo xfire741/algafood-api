@@ -1,4 +1,4 @@
-package br.com.eduardo.algafood.jpa;
+ package br.com.eduardo.algafood.jpa;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 
-public class InclusaoCozinhaMain {
+public class ExclusaoCozinhaMain {
 
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new SpringApplicationBuilder(AlgaFoodapiApplication.class)
@@ -18,17 +18,11 @@ public class InclusaoCozinhaMain {
 		
 		CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
 		
-		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setNome("Brasileira");
+		Cozinha cozinha = new Cozinha();
+		cozinha.setId(1L);
 		
-		Cozinha cozinha2 = new Cozinha();
-		cozinha2.setNome("Japonesa");
+		cadastroCozinha.remover(cozinha);
 		
-		cozinha1 = cadastroCozinha.salvar(cozinha1);
-		cozinha2 = cadastroCozinha.salvar(cozinha2);
-		
-		System.out.printf("%d - %s", cozinha1.getId(), cozinha1.getNome());
-		System.out.printf("%d - %s", cozinha2.getId(), cozinha2.getNome());
 	}
 	
 	
