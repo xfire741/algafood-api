@@ -8,8 +8,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
-import br.com.eduardo.algafood.domain.CozinhaRepository;
 import br.com.eduardo.algafood.domain.model.Cozinha;
+import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 
 @Component
 public class CozinhaRepositoryImpl implements CozinhaRepository{

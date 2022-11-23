@@ -1,31 +1,25 @@
 package br.com.eduardo.algafood.jpa;
 
-import java.util.List;
-
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
-import br.com.eduardo.algafood.domain.model.Cozinha;
-import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
+import br.com.eduardo.algafood.domain.model.Restaurante;
+import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 
-public class ConsultaCozinhaMain {
+public class BuscarRestauranteMain {
 
+	
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new SpringApplicationBuilder(AlgaFoodapiApplication.class)
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		CozinhaRepository cadastroCozinha = applicationContext.getBean(CozinhaRepository.class);
+		RestauranteRepository cadastroRestaurante = applicationContext.getBean(RestauranteRepository.class);
 		
-		List<Cozinha> cozinhas = cadastroCozinha.listar();
+		Restaurante restaurante = cadastroRestaurante.buscar(1L);
 		
-		for(Cozinha cozinha : cozinhas) {
-			System.out.println(cozinha.getNome());
-		}
+		System.out.println(restaurante.getNome());
 	}
-	
-	
-	
 }

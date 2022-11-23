@@ -7,8 +7,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
-import br.com.eduardo.algafood.domain.CozinhaRepository;
 import br.com.eduardo.algafood.domain.model.Cozinha;
+import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 
 public class InclusaoCozinhaMain {
 

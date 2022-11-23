@@ -1,4 +1,4 @@
-package br.com.eduardo.algafood.domain;
+package br.com.eduardo.algafood.domain.repository;
 
 import java.util.List;
 
