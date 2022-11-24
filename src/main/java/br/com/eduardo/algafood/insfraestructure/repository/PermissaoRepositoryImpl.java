@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -27,11 +28,13 @@ public class PermissaoRepositoryImpl implements PermissaoRepository{
 		return manager.find(Permissao.class, id);
 	}
 
+	@Transactional
 	@Override
 	public Permissao salvar(Permissao permissao) {
 		return manager.merge(permissao);
 	}
 
+	@Transactional
 	@Override
 	public void remover(Permissao permissao) {
 		buscar(permissao.getId());
