@@ -21,11 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.eduardo.algafood.api.model.CozinhasXmlWrapper;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
+import br.com.eduardo.algafood.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
 
+	@Autowired
+	private CadastroCozinhaService cadastroCozinha;
+	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 
@@ -51,7 +55,7 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-		return cozinhaRepository.salvar(cozinha);
+		return cadastroCozinha.salvar(cozinha);
 	}
 
 	@PutMapping("/{id}")
