@@ -18,64 +18,62 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.Cidade;
-import br.com.eduardo.algafood.domain.model.Estado;
 import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
 import br.com.eduardo.algafood.insfraestructure.repository.CidadeRepositoryImpl;
 
 @RestController
 @RequestMapping("/cidades")
-public class CIdadeController {
-	
+public class CidadeController {
+
 	@Autowired
 	private CidadeRepositoryImpl cidadeRepository;
-	
+
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
-	
+
 	@GetMapping
-	public List<Cidade> listar(){
+	public List<Cidade> listar() {
 		return cidadeRepository.listar();
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long id) {
-		
+
 		Cidade cidade = cidadeRepository.buscar(id);
-		if(cidade != null) {
+		if (cidade != null) {
 			return ResponseEntity.ok(cidade);
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) {
 		return cadastroCidade.salvar(cidade);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
 		try {
 			cadastroCidade.excluir(id);
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Cidade> atualizar(@PathVariable Long id,
-			@RequestBody Cidade cidade) {
+	public ResponseEntity<Cidade> atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cidadeRepository.buscar(id);
-		
+
 		if (cidadeAtual != null) {
 			BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-			
+
 			cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 			return ResponseEntity.ok(cidadeAtual);
 		}
-		
+
 		return ResponseEntity.notFound().build();
 	}
 
