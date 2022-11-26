@@ -6,17 +6,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import br.com.eduardo.algafood.domain.model.Estado;
 import br.com.eduardo.algafood.domain.repository.EstadoRepository;
 
 @Component
-public class EstadoRepositoryImpl implements EstadoRepository{
+public class EstadoRepositoryImpl implements EstadoRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Override
 	public List<Estado> listar() {
 		return manager.createQuery("from Estado", Estado.class).getResultList();
@@ -35,9 +36,12 @@ public class EstadoRepositoryImpl implements EstadoRepository{
 
 	@Transactional
 	@Override
-	public void remover(Estado estado) {
-		buscar(estado.getId());
+	public void remover(Long id) {
+		Estado estado = buscar(id);
+
+		if (estado == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
 		manager.remove(estado);
 	}
-
 }
