@@ -1,6 +1,7 @@
 package br.com.eduardo.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +19,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.Cidade;
+import br.com.eduardo.algafood.domain.repository.CidadeRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
-import br.com.eduardo.algafood.insfraestructure.repository.CidadeRepositoryImpl;
 
 @RestController
 @RequestMapping("/cidades")
 public class CidadeController {
-
+	
 	@Autowired
-	private CidadeRepositoryImpl cidadeRepository;
+	private CidadeRepository cidadeRepository;
 
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
 
 	@GetMapping
 	public List<Cidade> listar() {
-		return cidadeRepository.listar();
+		return cidadeRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long id) {
 
-		Cidade cidade = cidadeRepository.buscar(id);
-		if (cidade != null) {
-			return ResponseEntity.ok(cidade);
+		Optional<Cidade> cidade = cidadeRepository.findById(id);
+		if (cidade.isPresent()) {
+			return ResponseEntity.ok(cidade.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -65,13 +66,13 @@ public class CidadeController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Cidade> atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
-		Cidade cidadeAtual = cidadeRepository.buscar(id);
+		Optional<Cidade> cidadeAtual = cidadeRepository.findById(id);
 
-		if (cidadeAtual != null) {
-			BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+		if (cidadeAtual.isPresent()) {
+			BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
 
-			cidadeAtual = cadastroCidade.salvar(cidadeAtual);
-			return ResponseEntity.ok(cidadeAtual);
+			Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());
+			return ResponseEntity.ok(cidadeSalva);
 		}
 
 		return ResponseEntity.notFound().build();

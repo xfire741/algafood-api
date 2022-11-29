@@ -27,12 +27,12 @@ public class CadastroRestauranteService {
 						String.format("Não exite cozinha cadastrada com o código informado %d", cozinhaId)));
 		
 		restaurante.setCozinha(cozinha);
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 	
 	public void excluir(Long id) {
 		try {
-		restauranteRepository.remover(id);
+		restauranteRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Restaurante com o código %d não encontrado", id));

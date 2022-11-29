@@ -8,22 +8,22 @@ import org.springframework.stereotype.Service;
 import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.Estado;
-import br.com.eduardo.algafood.insfraestructure.repository.EstadoRepositoryImpl;
+import br.com.eduardo.algafood.domain.repository.EstadoRepository;
 
 @Service
 public class CadastroEstadoService {
 	
 	@Autowired
-	private EstadoRepositoryImpl estadoRepository;
+	private EstadoRepository estadoRepository;
 	
 	public Estado salvar(Estado estado) {
-		return estadoRepository.salvar(estado);
+		return estadoRepository.save(estado);
 	}
 	
 	public void excluir(Long id) {
 		try {
 			
-			estadoRepository.remover(id);
+			estadoRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Estado com o código %d não encontrado", id));
