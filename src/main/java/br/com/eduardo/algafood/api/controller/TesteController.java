@@ -2,6 +2,7 @@ package br.com.eduardo.algafood.api.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,16 @@ public class TesteController {
 	@GetMapping("/restaurantes/por-taxa-frete")
 	public List<Restaurante> restaurantesPorTaxaFrete(BigDecimal taxaInicial, BigDecimal taxaFinal) {
 		return restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
+	}
+	
+	@GetMapping("/restaurantes/por-nome-id")
+	public List<Restaurante> restaurantesPorNomeEId(String nome, Long id) {
+		return restauranteRepository.findByNomeContainingAndCozinhaId(nome, id);
+	}
+	
+	@GetMapping("/restaurantes/por-primeiro-nome")
+	public Optional<Restaurante> restaurantePorNome(String nome) {
+		return restauranteRepository.findFirstRestauranteByNomeContaining(nome);
 	}
 	
 }
