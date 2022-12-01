@@ -1,7 +1,6 @@
 package br.com.eduardo.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
