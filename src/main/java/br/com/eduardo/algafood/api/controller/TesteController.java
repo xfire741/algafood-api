@@ -1,5 +1,8 @@
 package br.com.eduardo.algafood.api.controller;
 
+import static br.com.eduardo.algafood.infraestructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static br.com.eduardo.algafood.infraestructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +17,6 @@ import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
-import br.com.eduardo.algafood.infraestructure.repository.spec.RestauranteComFreteGratisSpec;
-import br.com.eduardo.algafood.infraestructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 
 @RestController
@@ -59,10 +60,8 @@ public class TesteController {
 	@GetMapping("/restaurantes/por-frete-gratis")
 	public List<Restaurante> restauranteComFreteGratis(String nome, 
 			BigDecimal taxaInicial, BigDecimal taxaFinal) {
-		var comFreteGratis = new RestauranteComFreteGratisSpec();
-		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
 		
-		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+		return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
 		
 	}
 
