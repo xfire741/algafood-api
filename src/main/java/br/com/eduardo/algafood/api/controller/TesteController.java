@@ -14,6 +14,8 @@ import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
+import br.com.eduardo.algafood.infraestructure.repository.spec.RestauranteComFreteGratisSpec;
+import br.com.eduardo.algafood.infraestructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 
 @RestController
@@ -51,6 +53,16 @@ public class TesteController {
 			BigDecimal taxaInicial, BigDecimal taxaFinal) {
 		
 		return restauranteRepository.find(nome, taxaInicial, taxaFinal);
+		
+	}
+	
+	@GetMapping("/restaurantes/por-frete-gratis")
+	public List<Restaurante> restauranteComFreteGratis(String nome, 
+			BigDecimal taxaInicial, BigDecimal taxaFinal) {
+		var comFreteGratis = new RestauranteComFreteGratisSpec();
+		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+		
+		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
 		
 	}
 
