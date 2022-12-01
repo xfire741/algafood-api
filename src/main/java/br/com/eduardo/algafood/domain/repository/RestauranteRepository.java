@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 
 @Repository
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
+public interface RestauranteRepository 
+extends JpaRepository<Restaurante, Long>, RestauranteRepositoryQueries {
 
 	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxainicial, BigDecimal taxaFinal);
 	
