@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
@@ -74,7 +75,7 @@ public class RestauranteController {
 			
 			if (restauranteAtual.isPresent()) {
 				BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id",
-						"formasPagamento", "endereco");
+						"formasPagamento", "endereco", "dataCadastro");
 				
 				return ResponseEntity.ok(cadastroRestaurante.salvar(restauranteAtual.get()));
 			}
@@ -95,6 +96,8 @@ public class RestauranteController {
 				return ResponseEntity.noContent().build(); 
 			} catch (EntidadeNaoEncontradaException e) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+			} catch (EntidadeEmUsoException e) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 			}
 		}
 		
