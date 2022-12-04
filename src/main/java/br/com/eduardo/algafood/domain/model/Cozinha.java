@@ -28,7 +28,7 @@ public class Cozinha {
 	
 	
 	
-	@Column(name = "nom_cozinha")
+	@Column(nullable = false)
 	private String nome;
 	
 	@JsonIgnore
