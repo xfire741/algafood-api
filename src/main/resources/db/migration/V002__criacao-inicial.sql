@@ -1,7 +1,3 @@
-
-ALTER TABLE cozinha
-MODIFY COLUMN nome VARCHAR(60) NOT NULL;
-
 CREATE TABLE cidade(
 	id BIGINT  AUTO_INCREMENT NOT NULL,
 	nome_cidade VARCHAR(80) NOT NULL,
@@ -9,3 +5,6 @@ CREATE TABLE cidade(
 	CONSTRAINT pk_cidade PRIMARY KEY (id)
 
 ) ENGINE=InnoDB default charset=utf8;
+
+ALTER TABLE cozinha
+MODIFY COLUMN nome VARCHAR(80) NOT NULL;
