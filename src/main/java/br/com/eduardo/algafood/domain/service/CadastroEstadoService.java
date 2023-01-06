@@ -13,6 +13,8 @@ import br.com.eduardo.algafood.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 	
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Estado com o código %d não encontrado";
+	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -26,11 +28,17 @@ public class CadastroEstadoService {
 			estadoRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
-					String.format("Estado com o código %d não encontrado", id));
+					String.format(MSG_ESTADO_NAO_ENCONTRADO, id));
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format("Estado de código %d não pode ser removida", id));
 		}
+	}
+	
+	public Estado buscarOuFalhar(Long id) {
+		return estadoRepository.findById(id)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(
+						String.format(MSG_ESTADO_NAO_ENCONTRADO, id)));
 	}
 
 }

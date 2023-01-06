@@ -44,15 +44,8 @@ public class RestauranteController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Restaurante> buscar(@PathVariable Long id) {
-		
-		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
-		if (restaurante.isPresent()) {
-			return ResponseEntity.ok(restaurante.get());
-		}
-		
-		return ResponseEntity.notFound().build();
-		
+	public Restaurante buscar(@PathVariable Long id) {
+		return cadastroRestaurante.buscarOuFalhar(id);
 	}
 	
 	@PostMapping
@@ -67,25 +60,15 @@ public class RestauranteController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante){
+	public Restaurante atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante){
 		
-		
-		try {
-			Optional<Restaurante> restauranteAtual = restauranteRepository.findById(id);
+			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 			
-			if (restauranteAtual.isPresent()) {
-				BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id",
+				BeanUtils.copyProperties(restaurante, restauranteAtual, "id",
 						"formasPagamento", "endereco", "dataCadastro", "produtos");
 				
-				return ResponseEntity.ok(cadastroRestaurante.salvar(restauranteAtual.get()));
-			}
+				return cadastroRestaurante.salvar(restauranteAtual);
 			
-			return ResponseEntity.notFound().build();
-		
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest()
-					.body(e.getMessage());
-		}
 	}
 		
 		@DeleteMapping("/{id}")
@@ -102,16 +85,13 @@ public class RestauranteController {
 		}
 		
 		@PatchMapping("/{id}")
-		public ResponseEntity<?> atualizarParcial(@PathVariable Long id,
+		public Restaurante atualizarParcial(@PathVariable Long id,
 				@RequestBody Map<String, Object> campos) {
-			Optional<Restaurante> restauranteAtual = restauranteRepository.findById(id);
+			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 			
-			if (restauranteAtual.isEmpty()) {
-				return ResponseEntity.notFound().build();
-			}
 			
-			merge(campos, restauranteAtual.get());
-			return atualizar(id, restauranteAtual.get());
+			merge(campos, restauranteAtual);
+			return atualizar(id, restauranteAtual);
 			
 		}
 
