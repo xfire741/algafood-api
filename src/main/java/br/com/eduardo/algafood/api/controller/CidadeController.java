@@ -1,7 +1,6 @@
 package br.com.eduardo.algafood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.repository.CidadeRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
@@ -25,7 +25,7 @@ import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
 @RestController
 @RequestMapping("/cidades")
 public class CidadeController {
-	
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
 
@@ -60,14 +60,20 @@ public class CidadeController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Cidade> atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
+	public Cidade atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
 
-	
-			BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
+		
+		try {
 			Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual);
-			return ResponseEntity.ok(cidadeSalva);
+			return cadastroCidade.salvar(cidadeSalva);
+		} catch (EntidadeNaoEncontradaException e) {
+
+			throw new NegocioException(e.getMessage());
+
 		}
+	}
 
 }
