@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
@@ -67,8 +68,11 @@ public class RestauranteController {
 				BeanUtils.copyProperties(restaurante, restauranteAtual, "id",
 						"formasPagamento", "endereco", "dataCadastro", "produtos");
 				
+				try {
 				return cadastroRestaurante.salvar(restauranteAtual);
-			
+				} catch (EntidadeNaoEncontradaException e) {
+					throw new NegocioException(e.getMessage());
+				}
 	}
 		
 		@DeleteMapping("/{id}")
