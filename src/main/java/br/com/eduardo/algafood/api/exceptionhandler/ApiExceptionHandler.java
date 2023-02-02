@@ -4,16 +4,16 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 
 @ControllerAdvice
-public class ApiExceptionHandler {
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> tratarEntidadeNaoEncontradaException(
@@ -35,16 +35,6 @@ public class ApiExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
 
-	}
-	
-	@ExceptionHandler(HttpMediaTypeException.class)
-	public ResponseEntity<?> tratarHttpMediaTypeException() {
-		Problema problema = Problema.builder()
-				.dataHora(LocalDateTime.now())
-				.mensagem("O tipo de midia não é aceito.").build();
-
-		return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(problema);
-		
 	}
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
