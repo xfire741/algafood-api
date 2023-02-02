@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.eduardo.algafood.domain.exception.CidadeNaoEncontradaException;
+import br.com.eduardo.algafood.domain.exception.CozinhaEmUsoException;
 import br.com.eduardo.algafood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.model.Cozinha;
@@ -13,9 +14,6 @@ import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 
 @Service
 public class CadastroCozinhaService {
-
-	private static final String MSG_COZINHA_NAO_ENCONTRADA = 
-			"Cozinha de código %d não pode ser removida";
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
@@ -32,8 +30,7 @@ public class CadastroCozinhaService {
 			throw new CozinhaNaoEncontradaException(cozinhaId);
 			
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(
-					String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
+			throw new CozinhaEmUsoException(cozinhaId);
 
 		}
 	}

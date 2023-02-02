@@ -76,16 +76,8 @@ public class RestauranteController {
 	}
 		
 		@DeleteMapping("/{id}")
-		public ResponseEntity<?> remover(@PathVariable Long id) {
-			
-			try {
-				cadastroRestaurante.excluir(id);
-				return ResponseEntity.noContent().build(); 
-			} catch (EntidadeNaoEncontradaException e) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-			} catch (EntidadeEmUsoException e) {
-				return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-			}
+		public void remover(@PathVariable Long id) {
+			cadastroRestaurante.excluir(id);
 		}
 		
 		@PatchMapping("/{id}")
