@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import br.com.eduardo.algafood.domain.exception.CidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.CozinhaEmUsoException;
 import br.com.eduardo.algafood.domain.exception.CozinhaNaoEncontradaException;
-import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 
