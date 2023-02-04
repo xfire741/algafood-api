@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -27,8 +29,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
 		
+		if(rootCause instanceof UnrecognizedPropertyException) {
+			return handleUnrecognizedPropertyException((UnrecognizedPropertyException) rootCause, headers, status, request);
+		}
+		
 		if(rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+		}
+		
+		if(rootCause instanceof IgnoredPropertyException) {
+			return handleIgnoredPropertyException((IgnoredPropertyException) rootCause, headers, status, request);
 		}
 		
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -70,6 +80,38 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(e, problem, 
 				new HttpHeaders(), status, request);
 
+	}
+	
+	public ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		String path = ex.getPath().stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining());
+		
+		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		String detail = String.format("A propriedade '%s' não existe", path);
+		
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(ex, problem, headers, status, request);
+		
+	}
+	
+	public ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		String path = ex.getPath().stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining());
+		
+		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		String detail = String.format("A propriedade '%s' não pode ser inserida no corpo da resposta", path);
+		
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(ex, problem, headers, status, request);
+		
 	}
 	
 	@ExceptionHandler(NegocioException.class)
