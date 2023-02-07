@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -75,7 +76,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<?> handleEntidadeNaoEncontradaException(
+	protected ResponseEntity<?> handleEntidadeNaoEncontradaException(
 			EntidadeNaoEncontradaException e, WebRequest request) {
 		
 		HttpStatus status = HttpStatus.NOT_FOUND;
@@ -89,7 +90,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	}
 	
-	public ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException ex,
+	protected ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		String path = ex.getPath().stream()
@@ -105,7 +106,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 	}
 	
-	public ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException ex,
+	protected ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		String path = ex.getPath().stream()
@@ -122,7 +123,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleNegocioException(NegocioException e, WebRequest request) {
+	protected ResponseEntity<?> handleNegocioException(NegocioException e, WebRequest request) {
 		
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		ProblemType problemType = ProblemType.ERRO_NEGOCIO;
@@ -134,7 +135,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
-	public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
+	protected ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
 		
 		HttpStatus status = HttpStatus.CONFLICT;
 		ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
@@ -211,7 +212,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Object> handleUncaughtzs(EntidadeEmUsoException ex, WebRequest request) {
+	protected ResponseEntity<Object> handleUncaughtzs(EntidadeEmUsoException ex, WebRequest request) {
 		
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		ProblemType problemType = ProblemType.ERRO_SISTEMA;
@@ -225,6 +226,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 		
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+		
+		String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente";
+		
+		Problem problem = createProblemBuilder(status, problemType, detail, LocalDateTime.now()).userMessage(detail).build();
+		
+		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
 	private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, 
