@@ -1,4 +1,4 @@
-package br.com.eduardo.algafood;
+package br.com.eduardo.algafood.core.validation;
 
 public interface Groups {
 
