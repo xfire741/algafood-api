@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
+import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
+import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.service.CadastroCozinhaService;
 
@@ -21,7 +23,7 @@ public class CadastroCozinhaIntegrationTests {
 	private CadastroCozinhaService cadastroCozinha;
 	
 	@Test
-	public void when_cadastro_cozinha_com_dados_corretos_then_deve_atribuir_id() {
+	public void quando_cadastro_cozinha_com_dados_corretos_then_deve_atribuir_id() {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
 		
@@ -32,16 +34,36 @@ public class CadastroCozinhaIntegrationTests {
 	}
 	
 	@Test
-	public void when_cozinha_sem_nome_then_deve_lancar_exception() {
+	public void quando_cozinha_sem_nome_entao_deve_lancar_exception() {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
+		
 		Executable salvarCozinha = () -> cadastroCozinha.salvar(novaCozinha);
 		
 		ConstraintViolationException exceptionEsperada = assertThrows(
 				ConstraintViolationException.class, salvarCozinha);
 		
 		assertThat(exceptionEsperada).isNotNull();
+	}
+	
+	@Test
+	public void quando_excluir_cozinha_em_uso_entao_lancar_exception() {
+		Executable excluirCozinha = () -> cadastroCozinha.excluir(1L);
 		
+		EntidadeEmUsoException exceptionEsperada = 
+				assertThrows(EntidadeEmUsoException.class, excluirCozinha);
+		
+		assertThat(exceptionEsperada).isNotNull();		
+	}
+	
+	@Test
+	public void quando_excluir_cozinha_inexistente_entao_lancar_exception() {
+		Executable excluirCozinha = () -> cadastroCozinha.excluir(1000L);
+		
+		EntidadeNaoEncontradaException exceptionEsperada = 
+				assertThrows(EntidadeNaoEncontradaException.class, excluirCozinha);
+		
+		assertThat(exceptionEsperada).isNotNull();
 		
 	}
 
