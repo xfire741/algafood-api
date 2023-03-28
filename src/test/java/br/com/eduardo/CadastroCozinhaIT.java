@@ -3,7 +3,6 @@ package br.com.eduardo;
 import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
 import static io.restassured.RestAssured.given;
 
-import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
+import br.com.eduardo.algafood.domain.model.Cozinha;
+import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
+import br.com.eduardo.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -24,9 +26,12 @@ public class CadastroCozinhaIT {
 	
 	@LocalServerPort
 	private int port;
+
+	@Autowired
+	private DatabaseCleaner databaseCleaner;
 	
 	@Autowired
-	private Flyway flyway;
+	private CozinhaRepository cozinhaRepository;
 	
 	@BeforeEach
 	public void setUp() {
@@ -34,7 +39,8 @@ public class CadastroCozinhaIT {
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
 		
-		flyway.migrate();
+		databaseCleaner.clearTables();
+		prepararDados(); 
 	}
 	
 	@Test
@@ -67,6 +73,16 @@ public class CadastroCozinhaIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
+	}
+	
+	private void prepararDados() {
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1);
+
+		Cozinha cozinha2 = new Cozinha();
+		cozinha2.setNome("Americana");
+		cozinhaRepository.save(cozinha2);
 	}
 
 }
