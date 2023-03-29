@@ -14,9 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
+import br.com.eduardo.algafood.DatabaseCleaner;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
-import br.com.eduardo.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -54,14 +54,14 @@ public class CadastroCozinhaIT {
 	}
 	
 	@Test
-	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {		
+	public void deveConter2Cozinhas_QuandoConsultarCozinhas() {		
 		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(4))
-			.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
+			.body("", Matchers.hasSize(2))
+			.body("nome", Matchers.hasItems("Indiana", "Americana"));
 	}
 	
 	@Test
@@ -77,7 +77,7 @@ public class CadastroCozinhaIT {
 	
 	private void prepararDados() {
 		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setNome("Tailandesa");
+		cozinha1.setNome("Indiana");
 		cozinhaRepository.save(cozinha1);
 
 		Cozinha cozinha2 = new Cozinha();
