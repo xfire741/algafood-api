@@ -1,4 +1,4 @@
-package br.com.eduardo.algafood;
+package br.com.eduardo.algafood.util;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;

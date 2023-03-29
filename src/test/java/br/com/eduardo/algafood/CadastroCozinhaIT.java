@@ -1,4 +1,4 @@
-package br.com.eduardo;
+package br.com.eduardo.algafood;
 
 import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
 import static io.restassured.RestAssured.given;
@@ -14,13 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
 import br.com.eduardo.algafood.AlgaFoodapiApplication;
-import br.com.eduardo.algafood.DatabaseCleaner;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
+import br.com.eduardo.algafood.util.DatabaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
-@SpringBootTest(classes = AlgaFoodapiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource("/application-test.properties")
 public class CadastroCozinhaIT {
 	
