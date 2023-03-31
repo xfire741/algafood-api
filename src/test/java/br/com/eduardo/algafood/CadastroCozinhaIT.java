@@ -2,6 +2,7 @@ package br.com.eduardo.algafood;
 
 import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
-import br.com.eduardo.algafood.AlgaFoodapiApplication;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 import br.com.eduardo.algafood.util.DatabaseCleaner;
@@ -41,6 +41,31 @@ public class CadastroCozinhaIT {
 		
 		databaseCleaner.clearTables();
 		prepararDados(); 
+	}
+	
+	@Test
+	public void deveRetornarEStatusCorretos_QuandoConsultarCozinhaExistente() {
+		
+		given()
+		.pathParam("cozinhaId", 2)
+		.accept(ContentType.JSON)
+	.when()
+		.get("/{cozinhaId}")
+	.then()
+		.statusCode(HttpStatus.OK.value())
+		.body("nome", equalTo("Americana"));
+	}
+	
+	@Test
+	public void deveRetornarStatus404_QuandoConsultarCozinhaInexistente() {
+		
+		given()
+		.pathParam("cozinhaId", 1000)
+		.accept(ContentType.JSON)
+	.when()
+		.get("/{cozinhaId}")
+	.then()
+		.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 	
 	@Test
