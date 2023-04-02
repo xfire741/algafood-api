@@ -20,7 +20,7 @@ public class RestauranteMixin {
 	@JsonIgnore
 	private Endereco endereco;
 	
-	//@JsonIgnore
+	@JsonIgnore
 	private LocalDateTime dataCadastro;
 	
 	@JsonIgnore
