@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.eduardo.algafood.api.model.CozinhaDTO;
 import br.com.eduardo.algafood.api.model.RestauranteDTO;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 
