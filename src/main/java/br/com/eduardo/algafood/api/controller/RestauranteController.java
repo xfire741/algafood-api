@@ -3,6 +3,7 @@ package br.com.eduardo.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.eduardo.algafood.api.model.CozinhaDTO;
+import br.com.eduardo.algafood.api.model.RestauranteDTO;
 import br.com.eduardo.algafood.core.validation.ValidacaoException;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
@@ -51,27 +54,29 @@ public class RestauranteController {
 	private SmartValidator validator;
 	
 	@GetMapping
-	public List<Restaurante> listar() {
-		return restauranteRepository.findAll();
+	public List<RestauranteDTO> listar() {
+		return toCollectionDTO(restauranteRepository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public Restaurante buscar(@PathVariable Long id) {
-		return cadastroRestaurante.buscarOuFalhar(id);
+	public RestauranteDTO buscar(@PathVariable Long id) {
+		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(id);
+		
+		return toDTO(restaurante);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
+	public RestauranteDTO adicionar(@RequestBody @Valid Restaurante restaurante) {
 		try {
-		return cadastroRestaurante.salvar(restaurante);
+		return toDTO(cadastroRestaurante.salvar(restaurante));
 		} catch(EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 	
 	@PutMapping("/{id}")
-	public Restaurante atualizar(@PathVariable Long id, @RequestBody @Valid Restaurante restaurante){
+	public RestauranteDTO atualizar(@PathVariable Long id, @RequestBody @Valid Restaurante restaurante){
 		
 			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 			
@@ -79,7 +84,7 @@ public class RestauranteController {
 						"formasPagamento", "endereco", "dataCadastro", "produtos");
 				
 				try {
-				return cadastroRestaurante.salvar(restauranteAtual);
+				return toDTO(cadastroRestaurante.salvar(restauranteAtual));
 				} catch (EntidadeNaoEncontradaException e) {
 					throw new NegocioException(e.getMessage());
 				}
@@ -91,7 +96,7 @@ public class RestauranteController {
 		}
 		
 		@PatchMapping("/{id}")
-		public Restaurante atualizarParcial(@PathVariable Long id,
+		public RestauranteDTO atualizarParcial(@PathVariable Long id,
 				@RequestBody Map<String, Object> campos, HttpServletRequest request) {
 			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 			
@@ -142,8 +147,27 @@ public class RestauranteController {
 				throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
 				
 			}
+			
+			
+			
 		}
 		
+		private RestauranteDTO toDTO(Restaurante restaurante) {
+			CozinhaDTO cozinhaDTO = new CozinhaDTO();
+			cozinhaDTO.setId(restaurante.getCozinha().getId());
+			cozinhaDTO.setNome(restaurante.getCozinha().getNome());
+			
+			RestauranteDTO restauranteDTO = new RestauranteDTO();
+			restauranteDTO.setId(restaurante.getId());
+			restauranteDTO.setNome(restaurante.getNome());
+			restauranteDTO.setTaxaFrete(restaurante.getTaxaFrete());
+			restauranteDTO.setCozinha(cozinhaDTO);
+			return restauranteDTO;
+		}
 		
-
+		private List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
+			return  restaurantes.stream()
+					.map(restaurante -> toDTO(restaurante))
+					.collect(Collectors.toList());
+		}
 }
