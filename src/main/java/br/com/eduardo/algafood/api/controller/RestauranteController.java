@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.eduardo.algafood.api.assembler.RestauranteInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.RestauranteModelAssembler;
-import br.com.eduardo.algafood.api.disassembler.RestauranteInputDisassembler;
 import br.com.eduardo.algafood.api.model.RestauranteDTO;
 import br.com.eduardo.algafood.api.model.input.RestauranteInputDTO;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
