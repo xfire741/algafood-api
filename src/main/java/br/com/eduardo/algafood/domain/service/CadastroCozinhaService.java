@@ -6,7 +6,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.eduardo.algafood.domain.exception.CidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.CozinhaEmUsoException;
 import br.com.eduardo.algafood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.Cozinha;
@@ -39,7 +38,7 @@ public class CadastroCozinhaService {
 
 	public Cozinha buscarOuFalhar(Long cozinhaId) {
 		return cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new CidadeNaoEncontradaException(cozinhaId));
+				.orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
 	}
 	
 }
