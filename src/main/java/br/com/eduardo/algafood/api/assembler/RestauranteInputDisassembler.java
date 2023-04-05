@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.eduardo.algafood.api.model.input.RestauranteInputDTO;
+import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 
@@ -23,6 +24,10 @@ public class RestauranteInputDisassembler {
 		//Para evitar identifier of an instance of 
 		//br.com.eduardo.algafood.domain.model.Cozinha was altered from 1 to 2
 		restaurante.setCozinha(new Cozinha());
+		
+		if(restaurante.getEndereco() != null) {
+		restaurante.getEndereco().setCidade(new Cidade());;
+		}
 		
 		modelMapper.map(restauranteInputDTO, restaurante);
 	}

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.eduardo.algafood.domain.exception.EntidadeEmUsoException;
 import br.com.eduardo.algafood.domain.exception.RestauranteNaoEncontradaException;
+import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
@@ -16,7 +17,10 @@ import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 public class CadastroRestauranteService {
 	
 	private static final String RESTAURANTE_EM_USO = "Restaurante com o código %d não pode ser removido, pois está em uso.";
-
+	
+	@Autowired
+	private CadastroCidadeService cadastroCidadeService;
+	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	
@@ -24,12 +28,14 @@ public class CadastroRestauranteService {
 	private RestauranteRepository restauranteRepository;
 	
 	@Transactional
-	public Restaurante salvar(Restaurante restaurante) {
-	    Long cozinhaId = restaurante.getCozinha().getId();
+	public Restaurante salvar(Restaurante restaurante) { 
+	    Cozinha cozinha = cadastroCozinha.buscarOuFalhar(restaurante.getCozinha().getId());
 	    
-	    Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+	    Cidade cidade = cadastroCidadeService
+	    		.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
 	    
 	    restaurante.setCozinha(cozinha);
+	    restaurante.getEndereco().setCidade(cidade);
 	    
 	    return restauranteRepository.save(restaurante);
 	}
