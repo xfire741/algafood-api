@@ -25,7 +25,7 @@ import br.com.eduardo.algafood.domain.repository.FormaPagamentoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroFormaPagamentoService;
 
 @RestController
-@RequestMapping("/pagamentos")
+@RequestMapping("/formas-pagamento")
 public class FormaPagamentoController {
 	
 	@Autowired
