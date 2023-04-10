@@ -61,6 +61,8 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 	
+	private Boolean aberto = Boolean.FALSE;
+	
 	private Boolean ativo = Boolean.TRUE;
 	
 	@CreationTimestamp
@@ -88,16 +90,20 @@ public class Restaurante {
 		setAtivo(false);
 	}
 	
+	public void abertura() {
+		setAberto(true);
+	}
+	
+	public void fechamento() {
+		setAberto(false);
+	}
+	
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
 		return getFormasPagamento().remove(formaPagamento);
 	}
 	
 	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
 		return getFormasPagamento().add(formaPagamento);
-	}
-	
-	public boolean adicionarProduto(Produto produto) {
-		return getProdutos().add(produto);
 	}
 	
 }
