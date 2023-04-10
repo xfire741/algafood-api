@@ -11,6 +11,7 @@ import br.com.eduardo.algafood.domain.exception.RestauranteNaoEncontradaExceptio
 import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.model.FormaPagamento;
+import br.com.eduardo.algafood.domain.model.Produto;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 
@@ -18,6 +19,9 @@ import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 public class CadastroRestauranteService {
 	
 	private static final String RESTAURANTE_EM_USO = "Restaurante com o código %d não pode ser removido, pois está em uso.";
+	
+	@Autowired
+	private CadastroProdutoService cadastroProdutoService;
 	
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
@@ -77,6 +81,16 @@ public class CadastroRestauranteService {
 		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
 		
 		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+	
+	@Transactional
+	public Produto adicionarProduto(Long restauranteId, Produto produto) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		produto.setRestaurante(restaurante);
+		cadastroProdutoService.salvar(produto);
+		restaurante.adicionarProduto(produto);
+		
+		return produto;
 	}
 	
 	@Transactional
