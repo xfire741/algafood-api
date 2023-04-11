@@ -12,12 +12,16 @@ import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.model.FormaPagamento;
 import br.com.eduardo.algafood.domain.model.Restaurante;
+import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
 	
 	private static final String RESTAURANTE_EM_USO = "Restaurante com o código %d não pode ser removido, pois está em uso.";
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuarioService;
 	
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
@@ -100,7 +104,21 @@ public class CadastroRestauranteService {
 		restaurante.adicionarFormaPagamento(formaPagamento);
 	}
 	
+	@Transactional
+	public void associarUsuarioResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+		
+		restaurante.adicionarUsuarioResponsavel(usuario);
+	}
 	
+	@Transactional
+	public void disassociarUsuarioResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+		
+		restaurante.removerUsuarioResponsavel(usuario);
+	}
 	
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 	    return restauranteRepository.findById(restauranteId)
