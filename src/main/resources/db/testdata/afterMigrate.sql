@@ -58,13 +58,15 @@ insert into grupo (id, nome) values (1, 'Cozinheiros');
 insert into grupo (id, nome) values (2, 'Gerentes');
 insert into grupo (id, nome) values (3, 'Donos');
 insert into grupo (id, nome) values (4, 'Entregadores');
-insert into grupo (id, nome) values (1, 'Gerente'), (2, 'Vendedor'), (3, 'Secretária'), (4, 'Cadastrador');
+insert into grupo (id, nome) values (5, 'Gerente'), (6, 'Vendedor'), (7, 'Secretária'), (8, 'Cadastrador');
 
 insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1); 
 
 insert into usuario(id, nome, email, senha) values (1, 'João da Silva', 'joaodasilva@gmail.com', '123');
 insert into usuario(id, nome, email, senha) values (2, 'Maria da Silva', 'mariadasilva@gmail.com', '123');
 insert into usuario(id, nome, email, senha) values (3, 'José da Silva', 'josedasilva@gmail.com', '123');
+
+insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
 
 insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3), (4, 1), (4, 2), (5, 1), (5, 2), (6, 3);
 
