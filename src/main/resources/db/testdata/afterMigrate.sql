@@ -58,6 +58,9 @@ insert into grupo (id, nome) values (1, 'Cozinheiros');
 insert into grupo (id, nome) values (2, 'Gerentes');
 insert into grupo (id, nome) values (3, 'Donos');
 insert into grupo (id, nome) values (4, 'Entregadores');
+insert into grupo (id, nome) values (1, 'Gerente'), (2, 'Vendedor'), (3, 'Secretária'), (4, 'Cadastrador');
+
+insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1); 
 
 insert into usuario(id, nome, email, senha) values (1, 'João da Silva', 'joaodasilva@gmail.com', '123');
 insert into usuario(id, nome, email, senha) values (2, 'Maria da Silva', 'mariadasilva@gmail.com', '123');
