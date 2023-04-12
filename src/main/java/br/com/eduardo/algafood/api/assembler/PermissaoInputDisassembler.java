@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.eduardo.algafood.api.model.PermissaoDTO;
 import br.com.eduardo.algafood.api.model.input.PermissaoInputDTO;
 import br.com.eduardo.algafood.domain.model.Permissao;
 
