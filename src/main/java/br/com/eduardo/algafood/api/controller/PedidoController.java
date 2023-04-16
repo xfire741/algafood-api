@@ -48,9 +48,9 @@ public class PedidoController {
 	@Autowired
 	private EmissaoPedidoService cadastroPedidoService;
 	
-	@GetMapping("/{id}")
-	public PedidoDTO buscar(@PathVariable Long id) {
-		return assembler.toDTO(cadastroPedidoService.buscarOuFalhar(id));
+	@GetMapping("/{codigoPedido}")
+	public PedidoDTO buscar(@PathVariable String codigoPedido) {
+		return assembler.toDTO(cadastroPedidoService.buscarOuFalhar(codigoPedido));
 	}
 	
 	@GetMapping
