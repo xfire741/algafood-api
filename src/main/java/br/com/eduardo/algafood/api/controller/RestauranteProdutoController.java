@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,12 +23,16 @@ import br.com.eduardo.algafood.api.model.ProdutoDTO;
 import br.com.eduardo.algafood.api.model.input.ProdutoInputDTO;
 import br.com.eduardo.algafood.domain.model.Produto;
 import br.com.eduardo.algafood.domain.model.Restaurante;
+import br.com.eduardo.algafood.domain.repository.ProdutoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroProdutoService;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos")
 public class RestauranteProdutoController {
+	
+	@Autowired
+	private ProdutoRepository produtoRepository;
 	
 	@Autowired
 	private ProdutoInputDisassembler produtoInputDisassembler;
@@ -42,10 +47,19 @@ public class RestauranteProdutoController {
 	private ProdutoModelAssembler produtoModelAssembler;
 	
 	@GetMapping
-	public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
+	public List<ProdutoDTO> listar(@PathVariable Long restauranteId, 
+			@RequestParam(required = false) boolean incluirInativos) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 		
-		return 	produtoModelAssembler.toCollectionDTO(restaurante.getProdutos());
+		List<Produto> todosProdutos = null;
+		
+		if (incluirInativos) {
+			todosProdutos = produtoRepository.findAllByRestaurante(restaurante);
+		} else {
+			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+		}
+		
+		return 	produtoModelAssembler.toCollectionDTO(todosProdutos);
 	}
 	
 	@PostMapping
