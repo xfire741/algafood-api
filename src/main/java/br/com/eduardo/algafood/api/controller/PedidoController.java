@@ -25,7 +25,9 @@ import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Pedido;
 import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.repository.PedidoRepository;
+import br.com.eduardo.algafood.domain.repository.filter.PedidoFilter;
 import br.com.eduardo.algafood.domain.service.EmissaoPedidoService;
+import br.com.eduardo.algafood.infraestructure.repository.spec.PedidoSpecs;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -54,8 +56,8 @@ public class PedidoController {
 	}
 		
 	@GetMapping
-	public List<PedidoResumoDTO> listar() {
-		return resumoModelAssembler.toCollectionDTO(pedidoRepository.findAll());
+	public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
+		return resumoModelAssembler.toCollectionDTO(pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro)));
 	}
 	
 	@PostMapping
