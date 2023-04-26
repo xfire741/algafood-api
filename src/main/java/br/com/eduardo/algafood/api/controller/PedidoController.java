@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.ImmutableMap;
+
 import br.com.eduardo.algafood.api.assembler.PedidoInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.PedidoModelAssembler;
 import br.com.eduardo.algafood.api.assembler.PedidoResumoModelAssembler;
 import br.com.eduardo.algafood.api.model.PedidoDTO;
 import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
 import br.com.eduardo.algafood.api.model.input.PedidoInputDTO;
+import br.com.eduardo.algafood.core.data.PageableTranslator;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Pedido;
@@ -62,6 +65,7 @@ public class PedidoController {
 	@GetMapping
 	public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, 
 	        @PageableDefault(size = 10) Pageable pageable) {
+		pageable = traduzirPageable(pageable);
 	    Page<Pedido> pedidosPage = pedidoRepository.findAll(
 	            PedidoSpecs.usandoFiltro(filtro), pageable);
 	    
@@ -90,6 +94,16 @@ public class PedidoController {
 	    } catch (EntidadeNaoEncontradaException e) {
 	        throw new NegocioException(e.getMessage(), e);
 	    }
+	}
+	
+	private Pageable traduzirPageable(Pageable apiPeageable) {
+		var mapeamento = ImmutableMap.of(
+				"codigo", "codigo",
+				"nomeRestaurante.nome", "restaurante.nome",
+				"nomeCliente", "cliente.nome",
+				"valorTotal", "valorTotal"
+				);
+		return PageableTranslator.translate(apiPeageable, mapeamento);
 	}
 	
 }
