@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import br.com.eduardo.algafood.domain.model.Produto;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 
-public interface ProdutoRepository extends CustomJpaRepository<Produto, Long>{
+public interface ProdutoRepository extends CustomJpaRepository<Produto, Long>, ProdutoRepositoryQueries {
 
 	@Query("from Produto where restaurante.id = :restaurante and id = :produto")
     Optional<Produto> findById(@Param("restaurante") Long restauranteId, 
