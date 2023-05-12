@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.eduardo.algafood.domain.exception.FotoProdutoNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.FotoProduto;
 import br.com.eduardo.algafood.domain.repository.ProdutoRepository;
 import br.com.eduardo.algafood.domain.service.FotoStorageService.NovaFoto;
@@ -19,6 +20,12 @@ public class CatalogoFotoProdutoService {
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
+		
+		return produtoRepository.findFotoById(restauranteId, produtoId)
+		.orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
+	}
 	
 	@Transactional
 	public FotoProduto salvar(FotoProduto foto, InputStream dadosArquivo) {
