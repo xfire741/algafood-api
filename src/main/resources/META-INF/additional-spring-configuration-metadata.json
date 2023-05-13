@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "algafood.storage.s3.chave-acesso-secreta",
+  "type": "java.lang.String",
+  "description": "A description for 'algafood.storage.s3.chave-acesso-secreta'"
+}]}
