@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import br.com.eduardo.algafood.domain.service.EnvioEmailService;
 import br.com.eduardo.algafood.infraestructure.service.email.FakeEnvioEmailService;
+import br.com.eduardo.algafood.infraestructure.service.email.SandboxEnvioEmailService;
 import br.com.eduardo.algafood.infraestructure.service.email.SmtpEnvioEmailService;
 
 @Configuration
@@ -21,6 +22,8 @@ public class EmailConfig {
 			return new FakeEnvioEmailService();
 		case SMTP:
 			return new SmtpEnvioEmailService();
+		case SANDBOX:
+			return new SandboxEnvioEmailService();
 		default:
 			return null;
 		}
