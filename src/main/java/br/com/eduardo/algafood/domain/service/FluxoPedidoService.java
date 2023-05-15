@@ -5,30 +5,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.eduardo.algafood.domain.model.Pedido;
-import br.com.eduardo.algafood.domain.service.EnvioEmailService.Mensagem;
+import br.com.eduardo.algafood.domain.repository.PedidoRepository;
 
 @Service
 public class FluxoPedidoService {
-
-	@Autowired
-	private EnvioEmailService envioEmailService;
 	
 	@Autowired
 	private EmissaoPedidoService emissaoPedidoService;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
 	
 	@Transactional
 	public void confirmar(String codigoPedido) {
 		Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 		pedido.confirmar();
 		
-		var mensagem = Mensagem.builder()
-				.assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
-				.corpo("pedido-confirmado.html")
-				.variavel("pedido", pedido)
-				.destinatario(pedido.getCliente().getEmail())
-				.build();
-		
-		envioEmailService.enviar(mensagem);
+		pedidoRepository.save(pedido);
 	}
 	
 	@Transactional
