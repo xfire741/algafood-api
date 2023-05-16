@@ -44,8 +44,12 @@ public class FormaPagamentoController {
 	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 	
 	@GetMapping("/{id}")
-	public FormaPagamentoDTO buscar(@PathVariable Long id) {
-		return assembler.toDTO(cadastroFormaPagamentoService.buscarOuFalhar(id));
+	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long id) {
+		FormaPagamentoDTO formaPagamento = 
+				assembler.toDTO(cadastroFormaPagamentoService.buscarOuFalhar(id));
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.body(formaPagamento);
 	}
 	
 	@GetMapping
