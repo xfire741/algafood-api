@@ -32,7 +32,6 @@ import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/restaurantes")
 public class RestauranteController {
