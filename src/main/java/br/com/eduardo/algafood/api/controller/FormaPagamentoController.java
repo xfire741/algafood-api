@@ -47,7 +47,21 @@ public class FormaPagamentoController {
 	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long id) {
+	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long id, ServletWebRequest request) {
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+		
+		String eTag = "0";
+		
+		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+		
+		if (dataUltimaAtualizacao != null) {
+			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+		}
+		
+		if (request.checkNotModified(eTag)) {
+			return null;
+		}
+		
 		FormaPagamentoDTO formaPagamento = 
 				assembler.toDTO(cadastroFormaPagamentoService.buscarOuFalhar(id));
 		return ResponseEntity.ok()
