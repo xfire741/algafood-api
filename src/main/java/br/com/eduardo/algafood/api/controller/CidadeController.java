@@ -27,6 +27,7 @@ import br.com.eduardo.algafood.domain.repository.CidadeRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Api(tags = "Cidades")
 @RestController
@@ -53,14 +54,15 @@ public class CidadeController {
 
 	@ApiOperation("Busca uma cidade por ID")
 	@GetMapping("/{id}")
-	public CidadeDTO buscar(@PathVariable Long id) {
+	public CidadeDTO buscar(@ApiParam(value = "ID de uma cidade") @PathVariable Long id) {
 		return cidadeModelAssembler.toDTO(cadastroCidade.buscarOuFalhar(id));
 	}
 
 	@ApiOperation("Cadastra uma cidade")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade")
+			@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInputDTO);
 			return cidadeModelAssembler.toDTO(cadastroCidade.salvar(cidade));
@@ -71,13 +73,15 @@ public class CidadeController {
 
 	@ApiOperation("Exclui uma cidade por ID")
 	@DeleteMapping("/{id}")
-	public void remover(@PathVariable Long id) {
+	public void remover(@ApiParam(value = "ID de uma cidade") @PathVariable Long id) {
 		cadastroCidade.excluir(id);
 	}
 
 	@ApiOperation("Atualiza uma cidade por ID")
 	@PutMapping("/{id}")
-	public CidadeDTO atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO atualizar(@ApiParam(value = "ID de uma cidade") @PathVariable Long id,
+			@ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados") 
+			@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
 
