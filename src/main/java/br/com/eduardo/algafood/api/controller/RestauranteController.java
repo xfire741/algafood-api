@@ -95,6 +95,7 @@ public class RestauranteController {
 				}
 	}
 		
+		@ResponseStatus(HttpStatus.NO_CONTENT)
 		@DeleteMapping("/{id}")
 		public void remover(@PathVariable Long id) {
 			cadastroRestaurante.excluir(id);

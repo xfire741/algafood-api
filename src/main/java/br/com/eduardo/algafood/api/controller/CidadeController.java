@@ -72,6 +72,7 @@ public class CidadeController {
 	}
 
 	@ApiOperation("Exclui uma cidade por ID")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void remover(@ApiParam(value = "ID de uma cidade") @PathVariable Long id) {
 		cadastroCidade.excluir(id);
