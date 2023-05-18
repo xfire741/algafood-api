@@ -15,6 +15,7 @@
 	<name>alga-foodapi</name>
 	<description>Projeto de aprendizado</description>
 	<properties>
+		<springfox.version>3.0.0</springfox.version>
 		<java.version>17</java.version>
 		<modelmapper.version>3.0.0</modelmapper.version>
 	</properties>
@@ -110,6 +111,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>${springfox.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
