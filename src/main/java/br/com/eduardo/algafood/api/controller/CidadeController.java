@@ -26,6 +26,7 @@ import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.repository.CidadeRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Api(tags = "Cidades")
 @RestController
@@ -44,16 +45,19 @@ public class CidadeController {
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
 
+	@ApiOperation("Lista as cidades")
 	@GetMapping
 	public List<CidadeDTO> listar() {
 		return cidadeModelAssembler.toCollectionDTO(cidadeRepository.findAll());
 	}
 
+	@ApiOperation("Busca uma cidade por ID")
 	@GetMapping("/{id}")
 	public CidadeDTO buscar(@PathVariable Long id) {
 		return cidadeModelAssembler.toDTO(cadastroCidade.buscarOuFalhar(id));
 	}
 
+	@ApiOperation("Cadastra uma cidade")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
@@ -65,11 +69,13 @@ public class CidadeController {
 		}
 	}
 
+	@ApiOperation("Exclui uma cidade por ID")
 	@DeleteMapping("/{id}")
 	public void remover(@PathVariable Long id) {
 		cadastroCidade.excluir(id);
 	}
 
+	@ApiOperation("Atualiza uma cidade por ID")
 	@PutMapping("/{id}")
 	public CidadeDTO atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
