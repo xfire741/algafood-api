@@ -3,6 +3,7 @@ package br.com.eduardo.algafood.core.openapi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -14,7 +15,8 @@ public class SpringFoxConfig {
 	public Docket apiDocket() {
 		return new Docket(DocumentationType.OAS_30)
 				.select()
-				.apis(RequestHandlerSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("br.com.eduardo.algafood.api"))
+				.paths(PathSelectors.any())
 				.build();
 	}
 
