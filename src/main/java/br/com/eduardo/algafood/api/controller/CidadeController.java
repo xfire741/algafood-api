@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,6 @@ import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Cidade;
 import br.com.eduardo.algafood.domain.repository.CidadeRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
-import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/cidades")
@@ -44,20 +44,19 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
 
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<CidadeDTO> listar() {
 		return cidadeModelAssembler.toCollectionDTO(cidadeRepository.findAll());
 	}
 
-	@GetMapping("/{id}")
-	public CidadeDTO buscar(@ApiParam(value = "ID de uma cidade") @PathVariable Long id) {
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public CidadeDTO buscar(@PathVariable Long id) {
 		return cidadeModelAssembler.toDTO(cadastroCidade.buscarOuFalhar(id));
 	}
 
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade")
-			@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInputDTO);
 			return cidadeModelAssembler.toDTO(cadastroCidade.salvar(cidade));
@@ -68,13 +67,12 @@ public class CidadeController implements CidadeControllerOpenApi {
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public void remover(@ApiParam(value = "ID de uma cidade") @PathVariable Long id) {
+	public void remover(@PathVariable Long id) {
 		cadastroCidade.excluir(id);
 	}
 
-	@PutMapping("/{id}")
-	public CidadeDTO atualizar(@ApiParam(value = "ID de uma cidade") @PathVariable Long id,
-			@ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados") 
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public CidadeDTO atualizar(@PathVariable Long id, 
 			@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
