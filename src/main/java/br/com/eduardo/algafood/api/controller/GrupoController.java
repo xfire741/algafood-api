@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.eduardo.algafood.api.assembler.GrupoInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.GrupoModelAssembler;
+import br.com.eduardo.algafood.api.controller.openapi.GrupoControllerOpenApi;
 import br.com.eduardo.algafood.api.model.GrupoDTO;
 import br.com.eduardo.algafood.api.model.input.GrupoInputDTO;
 import br.com.eduardo.algafood.domain.model.Grupo;
@@ -26,7 +27,7 @@ import br.com.eduardo.algafood.domain.service.CadastroGrupoService;
 
 @RestController
 @RequestMapping("/grupos")
-public class GrupoController {
+public class GrupoController implements GrupoControllerOpenApi {
 
 	@Autowired
 	private GrupoInputDisassembler grupoInputDisassembler;
