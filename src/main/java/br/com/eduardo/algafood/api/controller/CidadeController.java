@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.eduardo.algafood.api.assembler.CidadeInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.CidadeModelAssembler;
-import br.com.eduardo.algafood.api.controller.openapi.CidadeControllerOpenApi;
 import br.com.eduardo.algafood.api.model.CidadeDTO;
 import br.com.eduardo.algafood.api.model.input.CidadeInputDTO;
+import br.com.eduardo.algafood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.eduardo.algafood.domain.exception.EstadoNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Cidade;

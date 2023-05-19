@@ -1,4 +1,4 @@
-package br.com.eduardo.algafood.core.openapi.model;
+package br.com.eduardo.algafood.api.openapi.model;
 
 import java.util.List;
 
