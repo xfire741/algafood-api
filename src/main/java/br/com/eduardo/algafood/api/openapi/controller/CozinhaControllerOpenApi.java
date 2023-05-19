@@ -38,7 +38,8 @@ public interface CozinhaControllerOpenApi {
 	@ApiOperation("Atualiza uma cozinha por ID")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "Cozinha atualizada"),
-		@ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class)
+		@ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class),
+		@ApiResponse(code = 409, message = "Cozinha sendo utilizada")
 	})
 	public CozinhaDTO atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO);
 

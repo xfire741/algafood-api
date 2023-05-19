@@ -43,7 +43,8 @@ public interface CidadeControllerOpenApi {
 	@ApiOperation("Atualiza uma cidade por ID")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "Cidade atualizada"),
-		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
+		@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class),
+		@ApiResponse(code = 409, message = "Cidade sendo utilizada")
 	})
 	public CidadeDTO atualizar(@ApiParam(value = "ID de uma cidade") Long id,
 			@ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados") 
