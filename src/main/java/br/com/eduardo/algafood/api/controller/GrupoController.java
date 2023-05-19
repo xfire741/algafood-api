@@ -42,7 +42,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	@Autowired
 	private CadastroGrupoService cadastroGrupoService;
 	
-	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GrupoDTO buscar(@PathVariable Long id) {
 		return grupoModelAssembler.toDTO(cadastroGrupoService.buscarOuFalhar(id));
 	}
@@ -60,7 +60,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoModelAssembler.toDTO(cadastroGrupoService.salvar(grupo));
 	}
 	
-	@PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GrupoDTO atualizar(@PathVariable Long id, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupo = cadastroGrupoService.buscarOuFalhar(id);
 		
