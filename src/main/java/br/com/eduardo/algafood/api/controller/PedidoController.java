@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import br.com.eduardo.algafood.api.assembler.PedidoResumoModelAssembler;
 import br.com.eduardo.algafood.api.model.PedidoDTO;
 import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
 import br.com.eduardo.algafood.api.model.input.PedidoInputDTO;
+import br.com.eduardo.algafood.api.openapi.controller.PedidoControllerOpenApi;
 import br.com.eduardo.algafood.core.data.PageableTranslator;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
@@ -40,7 +42,7 @@ import io.swagger.annotations.ApiImplicitParams;
 
 @RestController
 @RequestMapping("/pedidos")
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
 	
 	
@@ -63,7 +65,7 @@ public class PedidoController {
 		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
 				name = "campos", paramType = "query", type = "string")
 	})
-	@GetMapping("/{codigoPedido}")
+	@GetMapping(path = "/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PedidoDTO buscar(@PathVariable String codigoPedido) {
 		return assembler.toDTO(cadastroPedidoService.buscarOuFalhar(codigoPedido));
 	}
@@ -72,7 +74,7 @@ public class PedidoController {
 		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
 				name = "campos", paramType = "query", type = "string")
 	})
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, 
 	        @PageableDefault(size = 10) Pageable pageable) {
 		pageable = traduzirPageable(pageable);
@@ -88,7 +90,7 @@ public class PedidoController {
 	    return pedidosResumoModelPage;
 	}
 	
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoDTO adicionar(@Valid @RequestBody PedidoInputDTO pedidoInput) {
 	    try {

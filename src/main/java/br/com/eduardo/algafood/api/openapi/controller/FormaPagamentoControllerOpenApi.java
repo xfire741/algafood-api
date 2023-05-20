@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api(tags = "Formas de Pagamento")
+@Api(tags = "Formas de pagamento")
 public interface FormaPagamentoControllerOpenApi {
 
 	@ApiOperation("Busca uma forma de pagamento por ID")

@@ -19,8 +19,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.CozinhaDTO;
+import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
 import br.com.eduardo.algafood.api.openapi.model.CozinhasModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.PageableModelOpenApi;
+import br.com.eduardo.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -57,12 +59,19 @@ public class SpringFoxConfig {
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 				.ignoredParameterTypes(ServletWebRequest.class)
-				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(Page.class, CozinhaDTO.class), 
-						CozinhasModelOpenApi.class))
-				.apiInfo(apiInfo())
-				.tags(new Tag("Cidades", "Gerencia as cidades"),
-						new Tag("Grupos", "Gerencia os grupos"));
+	            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(Page.class, CozinhaDTO.class),
+	                    CozinhasModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(Page.class, PedidoResumoDTO.class),
+	                    PedidosResumoModelOpenApi.class))
+	            .apiInfo(apiInfo())
+	            .tags(new Tag("Cidades", "Gerencia as cidades"),
+	                    new Tag("Grupos", "Gerencia os grupos de usuários"),
+	                    new Tag("Cozinhas", "Gerencia as cozinhas"),
+	                    new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+	                    new Tag("Pedidos", "Gerencia os pedidos"));
 	}
 	
 	private List<Response> globalGetResponseMessages() {
