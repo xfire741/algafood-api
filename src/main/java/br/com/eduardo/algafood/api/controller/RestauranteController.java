@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import br.com.eduardo.algafood.api.assembler.RestauranteModelAssembler;
 import br.com.eduardo.algafood.api.model.RestauranteDTO;
 import br.com.eduardo.algafood.api.model.input.RestauranteInputDTO;
 import br.com.eduardo.algafood.api.model.view.RestauranteView;
+import br.com.eduardo.algafood.api.openapi.controller.RestauranteControllerOpenApi;
 import br.com.eduardo.algafood.domain.exception.CidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
@@ -33,7 +35,7 @@ import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes")
-public class RestauranteController {
+public class RestauranteController implements RestauranteControllerOpenApi {
 	
 	@Autowired
 	private RestauranteInputDisassembler restauranteInputDisassembler;
@@ -48,7 +50,7 @@ public class RestauranteController {
 	private RestauranteRepository restauranteRepository;
 	
 	@JsonView(RestauranteView.Resumo.class)
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<RestauranteDTO> listar() {
 		List<RestauranteDTO> restaurantesDTO = restauranteModelAssembler
 				.toCollectionDTO(restauranteRepository.findAll());
@@ -57,20 +59,20 @@ public class RestauranteController {
 	}
 	
 	@JsonView(RestauranteView.ApenasNome.class)
-	@GetMapping(params = "projecao=apenas-nome")
+	@GetMapping(params = "projecao=apenas-nome", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<RestauranteDTO> listarApenasNome() {
 		return listar();
 	}
 	
 	
-	@GetMapping("/{id}")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public RestauranteDTO buscar(@PathVariable Long id) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(id);
 		
 		return restauranteModelAssembler.toDTO(restaurante);
 	}
 	
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInputDTO restauranteInput) {
 		try {
@@ -82,7 +84,7 @@ public class RestauranteController {
 		}
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public RestauranteDTO atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInputDTO restauranteInput){
 		try {
 			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
