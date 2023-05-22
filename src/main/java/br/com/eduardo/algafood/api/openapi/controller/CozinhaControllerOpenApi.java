@@ -16,20 +16,20 @@ import io.swagger.annotations.ApiResponses;
 public interface CozinhaControllerOpenApi {
 	
 	@ApiOperation("Lista as cozinhas")
-	public Page<CozinhaDTO> listar(Pageable pageable);
+	Page<CozinhaDTO> listar(Pageable pageable);
 	
 	@ApiOperation("Busca uma cozinha por ID")
 	@ApiResponses({
 		@ApiResponse(code = 400, message = "ID da cozinha inválido", response = Problem.class),
 		@ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class)
 	})
-	public CozinhaDTO buscar(@ApiParam(value = "ID de uma cozinha", required = true) Long id);
+	CozinhaDTO buscar(@ApiParam(value = "ID de uma cozinha", required = true) Long id);
 
 	@ApiOperation("Cadastra uma cozinha")
 	@ApiResponses({
 		@ApiResponse(code = 201, message = "Cozinha cadastrada")
 	})
-	public CozinhaDTO adicionar(@ApiParam (name = "corpo", value = "Representação de uma cozinha com os dados a serem adicionados",
+	CozinhaDTO adicionar(@ApiParam (name = "corpo", value = "Representação de uma cozinha com os dados a serem adicionados",
 	required = true) CozinhaInputDTO cozinhaInputDTO);
 
 	@ApiOperation("Atualiza uma cozinha por ID")
@@ -37,7 +37,7 @@ public interface CozinhaControllerOpenApi {
 		@ApiResponse(code = 200, message = "Cozinha atualizada"),
 		@ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class),
 	})
-	public CozinhaDTO atualizar(@ApiParam(value = "ID de uma cozinha", required = true) Long id, 
+	CozinhaDTO atualizar(@ApiParam(value = "ID de uma cozinha", required = true) Long id, 
 			@ApiParam(name = "corpo", value = "Representação de uma cozinha com os novos dados", required = true) CozinhaInputDTO cozinhaInputDTO);
 
 	@ApiOperation("Exclui uma cozinha por ID")
@@ -46,6 +46,6 @@ public interface CozinhaControllerOpenApi {
 		@ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class),
 		@ApiResponse(code = 409, message = "Cozinha sendo utilizada")
 	})
-	public void remover(@ApiParam(value = "ID de uma cozinha", required = true) Long id);
+	void remover(@ApiParam(value = "ID de uma cozinha", required = true) Long id);
 	
 }
