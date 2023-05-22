@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +21,14 @@ import br.com.eduardo.algafood.api.assembler.EstadoInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.EstadoModelAssembler;
 import br.com.eduardo.algafood.api.model.EstadoDTO;
 import br.com.eduardo.algafood.api.model.input.EstadoInputDTO;
+import br.com.eduardo.algafood.api.openapi.controller.EstadoControllerOpenApi;
 import br.com.eduardo.algafood.domain.model.Estado;
 import br.com.eduardo.algafood.domain.repository.EstadoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroEstadoService;
 
 @RestController
 @RequestMapping("/estados")
-public class EstadoController {
+public class EstadoController implements EstadoControllerOpenApi {
 	
 	@Autowired
 	private EstadoInputDisassembler estadoInputDisassembler;
@@ -40,17 +42,17 @@ public class EstadoController {
 	@Autowired
 	private EstadoRepository estadoRepository;
 
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<EstadoDTO> listar(){
 		return estadoModelAssembler.toCollectionDTO(estadoRepository.findAll());
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public EstadoDTO buscar(@PathVariable Long id) {
 		return estadoModelAssembler.toDTO(cadastroEstado.buscarOuFalhar(id));
 	}
 	
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Estado adicionar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado estado = estadoInputDisassembler.toDomainObject(estadoInputDTO);
@@ -63,7 +65,7 @@ public class EstadoController {
 			cadastroEstado.excluir(id);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(id);
 
