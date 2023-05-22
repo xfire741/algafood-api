@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.eduardo.algafood.api.assembler.FormaPagamentoModelAssembler;
 import br.com.eduardo.algafood.api.model.FormaPagamentoDTO;
+import br.com.eduardo.algafood.api.openapi.controller.RestauranteFormaDePagamentoControllerOpenApi;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/formas-pagamento")
-public class RestauranteFormaDePagamentoController {
+public class RestauranteFormaDePagamentoController implements RestauranteFormaDePagamentoControllerOpenApi {
 	
 	@Autowired
 	private FormaPagamentoModelAssembler formaPagamentoAssembler;
@@ -27,7 +29,7 @@ public class RestauranteFormaDePagamentoController {
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 	
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 		return formaPagamentoAssembler.toCollectionDTO(restaurante.getFormasPagamento());

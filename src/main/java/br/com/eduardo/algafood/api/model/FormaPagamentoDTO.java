@@ -1,5 +1,6 @@
 package br.com.eduardo.algafood.api.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,10 @@ import lombok.Setter;
 @Getter
 public class FormaPagamentoDTO {
 
+	@ApiModelProperty(example = "1")
 	private Long id;
+	
+	@ApiModelProperty(example = "Catão de crédito")
 	private String descricao;
 	
 }
