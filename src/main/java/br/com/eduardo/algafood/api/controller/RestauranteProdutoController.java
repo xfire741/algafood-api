@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +20,7 @@ import br.com.eduardo.algafood.api.assembler.ProdutoInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.ProdutoModelAssembler;
 import br.com.eduardo.algafood.api.model.ProdutoDTO;
 import br.com.eduardo.algafood.api.model.input.ProdutoInputDTO;
+import br.com.eduardo.algafood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
 import br.com.eduardo.algafood.domain.model.Produto;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.ProdutoRepository;
@@ -29,7 +29,7 @@ import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos")
-public class RestauranteProdutoController {
+public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
@@ -62,6 +62,13 @@ public class RestauranteProdutoController {
 		return 	produtoModelAssembler.toCollectionDTO(todosProdutos);
 	}
 	
+	@GetMapping("/{produtoId}")
+	public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
+		
+		return produtoModelAssembler.toDTO(produto);
+	}
+	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO adicionarProduto(@PathVariable Long restauranteId, 
@@ -81,12 +88,6 @@ public class RestauranteProdutoController {
 		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
 		produtoInputDisassembler.copyToDomainObject(produtoInputDTO, produto);
 		return produtoModelAssembler.toDTO(cadastroProdutoService.salvar(produto));
-	}
-	
-	@DeleteMapping("/{produtoId}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void excluirProduto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
-		cadastroProdutoService.excluir(restauranteId ,produtoId);
 	}
 	
 }
