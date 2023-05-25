@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +47,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	@Autowired
 	private ProdutoModelAssembler produtoModelAssembler;
 	
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ProdutoDTO> listar(@PathVariable Long restauranteId, 
 			@RequestParam(required = false) boolean incluirInativos) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
@@ -62,14 +63,14 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return 	produtoModelAssembler.toCollectionDTO(todosProdutos);
 	}
 	
-	@GetMapping("/{produtoId}")
+	@GetMapping(path = "/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
 		
 		return produtoModelAssembler.toDTO(produto);
 	}
 	
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO adicionarProduto(@PathVariable Long restauranteId, 
 			@RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
@@ -82,7 +83,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 			return produtoModelAssembler.toDTO(cadastroProdutoService.salvar(produto));
 	}
 	
-	@PutMapping("/{produtoId}")
+	@PutMapping(path = "/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ProdutoDTO atualizarProduto(@PathVariable Long restauranteId, 
 			@PathVariable Long produtoId, @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
 		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
