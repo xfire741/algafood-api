@@ -21,13 +21,14 @@ import br.com.eduardo.algafood.api.model.UsuarioDTO;
 import br.com.eduardo.algafood.api.model.input.SenhaInput;
 import br.com.eduardo.algafood.api.model.input.UsuarioComSenhaInput;
 import br.com.eduardo.algafood.api.model.input.UsuarioInput;
+import br.com.eduardo.algafood.api.openapi.controller.UsuarioControllerOpenApi;
 import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.repository.UsuarioRepository;
 import br.com.eduardo.algafood.domain.service.CadastroUsuarioService;
 
 @RestController
 @RequestMapping("/usuarios")
-public class UsuarioController {
+public class UsuarioController implements UsuarioControllerOpenApi {
 	 
 		@Autowired
 	    private UsuarioRepository usuarioRepository;
