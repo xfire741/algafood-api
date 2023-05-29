@@ -83,7 +83,8 @@ public class SpringFoxConfig {
 	                    new Tag("Restaurantes", "Gerencia os restaurantes"),
 	                    new Tag("Estados", "Gerencia os estados"),
 	                    new Tag("Produtos", "Gerencia os produtos de restaurantes"),
-	                    new Tag("Usuários", "Gerencia os usuários"));
+	                    new Tag("Usuários", "Gerencia os usuários"),
+	                    new Tag("Estatísticas", "Estatísticas da AlgaFood"));
 	}
 	
 	private List<Response> globalGetResponseMessages() {
@@ -148,7 +149,7 @@ public class SpringFoxConfig {
 				.description("API aberta para clientes e restaurantes")
 				.version("1")
 				.contact(new Contact("Eduardo",
-						"https://www.linkedin.com/in/eduardo-victor-silva-de-melo-7649831b3/", "eduardovictor28@gmail.com"))
+						"https://github.com/xfire741", "eduardovictor28@gmail.com"))
 				.build();
 	}
 	
