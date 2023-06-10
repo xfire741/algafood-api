@@ -1,6 +1,6 @@
 package br.com.eduardo.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.CidadeDTO;
@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiResponses;
 public interface CidadeControllerOpenApi {
 
 	@ApiOperation("Lista as cidades")
-	public List<CidadeDTO> listar();
+	public CollectionModel<CidadeDTO> listar();
 
 	@ApiOperation("Busca uma cidade por ID")
 	@ApiResponses({
