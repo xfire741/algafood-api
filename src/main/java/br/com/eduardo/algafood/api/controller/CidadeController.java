@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,15 +54,15 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public CidadeDTO buscar(@PathVariable Long id) {
 		CidadeDTO cidadeDTO = cidadeModelAssembler.toDTO(cadastroCidade.buscarOuFalhar(id));
+
+		cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
+				.buscar(cidadeDTO.getId())).withSelfRel());
 		
-		cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-				.slash(cidadeDTO.getId()).withSelfRel());
+		cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
+				.listar()).withRel("cidades"));
 		
-		cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-				.withRel("cidades"));
-		
-		cidadeDTO.getEstado().add(WebMvcLinkBuilder.linkTo(EstadoController.class)
-				.slash(cidadeDTO.getEstado().getId()).withSelfRel());
+		cidadeDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class)
+				.buscar(cidadeDTO.getEstado().getId())).withSelfRel());
 		
 		return cidadeDTO;
 	}
