@@ -13,7 +13,7 @@ import br.com.eduardo.algafood.api.model.CidadeDTO;
 import br.com.eduardo.algafood.domain.model.Cidade;
 
 @Component
-public class CidadeModelAssembler extends  RepresentationModelAssemblerSupport<Cidade, CidadeDTO> {
+public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Cidade, CidadeDTO> {
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -27,11 +27,6 @@ public class CidadeModelAssembler extends  RepresentationModelAssemblerSupport<C
 		CidadeDTO cidadeDTO = createModelWithId(cidade.getId(), cidade);
 		
 		modelMapper.map(cidade, cidadeDTO);
-		
-//		CidadeDTO cidadeDTO = modelMapper.map(cidade, CidadeDTO.class);
-		
-//		cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
-//				.buscar(cidadeDTO.getId())).withSelfRel());
 		
 		cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
 				.listar()).withRel("cidades"));

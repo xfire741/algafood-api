@@ -1,6 +1,6 @@
 package br.com.eduardo.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.UsuarioDTO;
@@ -17,7 +17,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    List<UsuarioDTO> listarUsuariosResponsaveis(
+    CollectionModel<UsuarioDTO> listarUsuariosResponsaveis(
             @ApiParam(value = "ID do restaurante", example = "1", required = true)
             Long restauranteId);
 

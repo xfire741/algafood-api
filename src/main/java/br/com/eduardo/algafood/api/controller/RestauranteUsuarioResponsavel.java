@@ -1,8 +1,7 @@
 package br.com.eduardo.algafood.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,10 +29,10 @@ public class RestauranteUsuarioResponsavel implements RestauranteUsuarioResponsa
 	private CadastroRestauranteService cadastroRestauranteService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<UsuarioDTO> listarUsuariosResponsaveis(@PathVariable Long restauranteId) {
+	public CollectionModel<UsuarioDTO> listarUsuariosResponsaveis(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 		
-		return usuarioAssembler.toCollectionDTO(restaurante.getUsuariosResponsaveis());
+		return usuarioAssembler.toCollectionModel(restaurante.getUsuariosResponsaveis());
 	}
 	
 	@PutMapping("/{usuarioId}")
