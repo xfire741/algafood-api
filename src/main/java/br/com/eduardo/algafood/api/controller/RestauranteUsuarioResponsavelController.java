@@ -2,6 +2,7 @@ package br.com.eduardo.algafood.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +21,7 @@ import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/responsaveis")
-public class RestauranteUsuarioResponsavel implements RestauranteUsuarioResponsavelControllerOpenApi {
+public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 
 	@Autowired
 	private UsuarioModelAssembler usuarioAssembler;
@@ -32,7 +33,10 @@ public class RestauranteUsuarioResponsavel implements RestauranteUsuarioResponsa
 	public CollectionModel<UsuarioDTO> listarUsuariosResponsaveis(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 		
-		return usuarioAssembler.toCollectionModel(restaurante.getUsuariosResponsaveis());
+		return usuarioAssembler.toCollectionModel(restaurante.getUsuariosResponsaveis())
+				.removeLinks()
+				.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
+						.listarUsuariosResponsaveis(restauranteId)).withSelfRel());
 	}
 	
 	@PutMapping("/{usuarioId}")
