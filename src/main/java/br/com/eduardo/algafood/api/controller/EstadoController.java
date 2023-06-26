@@ -1,10 +1,9 @@
 package br.com.eduardo.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,13 +42,13 @@ public class EstadoController implements EstadoControllerOpenApi {
 	private EstadoRepository estadoRepository;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<EstadoDTO> listar(){
-		return estadoModelAssembler.toCollectionDTO(estadoRepository.findAll());
+	public CollectionModel<EstadoDTO> listar(){
+		return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
 	}
 	
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public EstadoDTO buscar(@PathVariable Long id) {
-		return estadoModelAssembler.toDTO(cadastroEstado.buscarOuFalhar(id));
+		return estadoModelAssembler.toModel(cadastroEstado.buscarOuFalhar(id));
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +70,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 
 		estadoInputDisassembler.copyToDomainObject(estadoInputDTO, estadoAtual);
 		
-		return estadoModelAssembler.toDTO(cadastroEstado.salvar(estadoAtual));
+		return estadoModelAssembler.toModel(cadastroEstado.salvar(estadoAtual));
 		
 	}
 	
