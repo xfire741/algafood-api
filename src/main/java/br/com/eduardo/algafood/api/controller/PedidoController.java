@@ -1,14 +1,13 @@
 package br.com.eduardo.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +49,10 @@ public class PedidoController implements PedidoControllerOpenApi {
 	private PedidoInputDisassembler pedidoInputDisassembler;
 	
 	@Autowired
-	private PedidoResumoModelAssembler resumoModelAssembler;
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+	
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 	
 	@Autowired
 	private PedidoModelAssembler assembler;
@@ -67,27 +69,23 @@ public class PedidoController implements PedidoControllerOpenApi {
 	})
 	@GetMapping(path = "/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PedidoDTO buscar(@PathVariable String codigoPedido) {
-		return assembler.toDTO(cadastroPedidoService.buscarOuFalhar(codigoPedido));
+		return assembler.toModel(cadastroPedidoService.buscarOuFalhar(codigoPedido));
 	}
 	
+	@Override
 	@ApiImplicitParams({
 		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
 				name = "campos", paramType = "query", type = "string")
 	})
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, 
+	public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, 
 	        @PageableDefault(size = 10) Pageable pageable) {
 		pageable = traduzirPageable(pageable);
+	    
 	    Page<Pedido> pedidosPage = pedidoRepository.findAll(
 	            PedidoSpecs.usandoFiltro(filtro), pageable);
 	    
-	    List<PedidoResumoDTO> pedidosResumoModel = resumoModelAssembler
-	            .toCollectionDTO(pedidosPage.getContent());
-	    
-	    Page<PedidoResumoDTO> pedidosResumoModelPage = new PageImpl<>(
-	            pedidosResumoModel, pageable, pedidosPage.getTotalElements());
-	    
-	    return pedidosResumoModelPage;
+	    return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -102,7 +100,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 
 	        novoPedido = cadastroPedidoService.emitir(novoPedido);
 
-	        return assembler.toDTO(novoPedido);
+	        return assembler.toModel(novoPedido);
 	    } catch (EntidadeNaoEncontradaException e) {
 	        throw new NegocioException(e.getMessage(), e);
 	    }
