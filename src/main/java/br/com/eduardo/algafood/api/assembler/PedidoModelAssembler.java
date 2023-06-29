@@ -3,16 +3,10 @@ package br.com.eduardo.algafood.api.assembler;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import br.com.eduardo.algafood.api.AlgaLinks;
-import br.com.eduardo.algafood.api.controller.CidadeController;
-import br.com.eduardo.algafood.api.controller.FormaPagamentoController;
 import br.com.eduardo.algafood.api.controller.PedidoController;
-import br.com.eduardo.algafood.api.controller.RestauranteController;
-import br.com.eduardo.algafood.api.controller.RestauranteProdutoController;
-import br.com.eduardo.algafood.api.controller.UsuarioController;
 import br.com.eduardo.algafood.api.model.PedidoDTO;
 import br.com.eduardo.algafood.domain.model.Pedido;
 
@@ -35,22 +29,21 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
         
         pedidoDTO.add(algaLinks.linkToPedidos());
         
-        pedidoDTO.getRestaurante().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
-                .buscar(pedido.getRestaurante().getId())).withSelfRel());
+        pedidoDTO.getRestaurante().add(
+                algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
         
-        pedidoDTO.getCliente().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class)
-                .buscar(pedido.getCliente().getId())).withSelfRel());
+        pedidoDTO.getCliente().add(
+                algaLinks.linkToUsuario(pedido.getCliente().getId()));
         
-        pedidoDTO.getFormaPagamento().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FormaPagamentoController.class)
-                .buscar(pedido.getFormaPagamento().getId(), null)).withSelfRel());
+        pedidoDTO.getFormaPagamento().add(
+                algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
         
-        pedidoDTO.getEnderecoEntrega().getCidade().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
-                .buscar(pedido.getEnderecoEntrega().getCidade().getId())).withSelfRel());
+        pedidoDTO.getEnderecoEntrega().getCidade().add(
+                algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
         
         pedidoDTO.getItens().forEach(item -> {
-            item.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteProdutoController.class)
-                    .buscar(pedidoDTO.getRestaurante().getId(), item.getProdutoId()))
-                    .withRel("produto"));
+            item.add(algaLinks.linkToProduto(
+                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
         });
 		
 		return pedidoDTO;
