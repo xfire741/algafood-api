@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import br.com.eduardo.algafood.api.controller.CidadeController;
 import br.com.eduardo.algafood.api.controller.CozinhaController;
 import br.com.eduardo.algafood.api.controller.EstadoController;
+import br.com.eduardo.algafood.api.controller.FluxoPedidoController;
 import br.com.eduardo.algafood.api.controller.FormaPagamentoController;
 import br.com.eduardo.algafood.api.controller.PedidoController;
 import br.com.eduardo.algafood.api.controller.RestauranteController;
@@ -40,6 +41,21 @@ public class AlgaLinks {
         
         return Link.of(UriTemplate.of(pedidosURL, PAGINACAO_VARIABLES.concat(filterVariables)),
         		"pedidos");
+	}
+	
+	public Link linkToConfirmacaoPedido(String codigoPedido, String rel) {
+		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FluxoPedidoController.class)
+				.confirmar(codigoPedido)).withRel(rel);
+	}
+	
+	public Link linkToEntregaPedido(String codigoPedido, String rel) {
+		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FluxoPedidoController.class)
+				.entregar(codigoPedido)).withRel(rel);
+	}
+	
+	public Link linkToCancelamentoPedido(String codigoPedido, String rel) {
+		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FluxoPedidoController.class)
+				.cancelar(codigoPedido)).withRel(rel);
 	}
 	
 	public Link linkToRestaurante(Long restauranteId, String rel) {
