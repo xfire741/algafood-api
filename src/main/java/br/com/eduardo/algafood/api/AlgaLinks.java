@@ -16,6 +16,7 @@ import br.com.eduardo.algafood.api.controller.FluxoPedidoController;
 import br.com.eduardo.algafood.api.controller.FormaPagamentoController;
 import br.com.eduardo.algafood.api.controller.PedidoController;
 import br.com.eduardo.algafood.api.controller.RestauranteController;
+import br.com.eduardo.algafood.api.controller.RestauranteFormaDePagamentoController;
 import br.com.eduardo.algafood.api.controller.RestauranteProdutoController;
 import br.com.eduardo.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import br.com.eduardo.algafood.api.controller.UsuarioController;
@@ -41,6 +42,37 @@ public class AlgaLinks {
         
         return Link.of(UriTemplate.of(pedidosURL, PAGINACAO_VARIABLES.concat(filterVariables)),
         		"pedidos");
+	}
+	
+	public Link linkToRestauranteResponsaveis(Long restauranteId, String rel) {
+		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
+				.listarUsuariosResponsaveis(restauranteId)).withRel(rel);
+	}
+	
+	public Link linkToResponsaveisRestaurante(Long restauranteId) {
+		return linkToRestauranteResponsaveis(restauranteId, IanaLinkRelations.SELF.value());
+	}
+	
+	public Link linkToRestaurantes(String rel) {
+	    return WebMvcLinkBuilder.linkTo(RestauranteController.class).withRel(rel);
+	}
+
+	public Link linkToRestaurantes() {
+	    return linkToRestaurantes(IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteFormaDePagamentoController.class)
+	            .listar(restauranteId)).withRel(rel);
+	}
+
+	public Link linkToCozinha(Long cozinhaId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CozinhaController.class)
+	            .buscar(cozinhaId)).withRel(rel);
+	}
+
+	public Link linkToCozinha(Long cozinhaId) {
+	    return linkToCozinha(cozinhaId, IanaLinkRelations.SELF.value());
 	}
 	
 	public Link linkToConfirmacaoPedido(String codigoPedido, String rel) {
@@ -96,10 +128,6 @@ public class AlgaLinks {
 	public Link linkToResponsaveisRestaurante(Long restauranteId, String rel) {
 	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteUsuarioResponsavelController.class)
 	            .listarUsuariosResponsaveis(restauranteId)).withRel(rel);
-	}
-
-	public Link linkToResponsaveisRestaurante(Long restauranteId) {
-	    return linkToResponsaveisRestaurante(restauranteId, IanaLinkRelations.SELF.value());
 	}
 
 	public Link linkToFormaPagamento(Long formaPagamentoId, String rel) {

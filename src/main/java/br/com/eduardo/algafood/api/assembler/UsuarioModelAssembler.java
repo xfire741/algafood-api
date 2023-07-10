@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import br.com.eduardo.algafood.api.AlgaLinks;
@@ -36,10 +35,10 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
         return usuarioDTO;
 	}
 	
-    @Override
-    public CollectionModel<UsuarioDTO> toCollectionModel(Iterable<? extends Usuario> entities) {
-        return super.toCollectionModel(entities)
-            .add(WebMvcLinkBuilder.linkTo(UsuarioController.class).withSelfRel());
-    } 
+	@Override
+	public CollectionModel<UsuarioDTO> toCollectionModel(Iterable<? extends Usuario> entities) {
+	    return super.toCollectionModel(entities)
+	        .add(algaLinks.linkToUsuarios());
+	}
 	
 }
