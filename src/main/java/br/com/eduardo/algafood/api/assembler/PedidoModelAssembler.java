@@ -27,7 +27,7 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
 		PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoDTO);
         
-        pedidoDTO.add(algaLinks.linkToPedidos());
+        pedidoDTO.add(algaLinks.linkToPedidos("pedidos"));
         
         
         if(pedido.podeSerConfirmado()) {
