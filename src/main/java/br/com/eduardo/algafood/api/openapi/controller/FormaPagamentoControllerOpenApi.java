@@ -1,7 +1,6 @@
 package br.com.eduardo.algafood.api.openapi.controller;
 
-import java.util.List;
-
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -26,7 +25,7 @@ public interface FormaPagamentoControllerOpenApi {
 			@ApiParam(value = "ID de uma forma de pagamento", example = "1", required = true) Long id, ServletWebRequest request);
 	
 	@ApiOperation("Lista as formas de pagamento")
-	ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request);
+	ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request);
 	
 	@ApiOperation("Cadastra uma forma de pagamento")
 	@ApiResponses({

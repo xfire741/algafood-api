@@ -46,6 +46,18 @@ public class AlgaLinks {
 	            PAGINACAO_VARIABLES.concat(filtroVariables)), rel);
 	}
 	
+	public Link linkToRestauranteFormasPagamento(Long restauranteId) {
+	    return linkToRestauranteFormasPagamento(restauranteId, IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToFormasPagamento(String rel) {
+	    return WebMvcLinkBuilder.linkTo(FormaPagamentoController.class).withRel(rel);
+	}
+
+	public Link linkToFormasPagamento() {
+	    return linkToFormasPagamento(IanaLinkRelations.SELF.value());
+	}
+	
 	public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
 	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
 	            .abertura(restauranteId)).withRel(rel);
