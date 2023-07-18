@@ -58,6 +58,15 @@ public class AlgaLinks {
 	    return linkToFormasPagamento(IanaLinkRelations.SELF.value());
 	}
 	
+	public Link linkToRestauranteFormaPagamentoDesassociacao(Long restauranteId,
+			Long formaPagamentoId, String rel) {
+		
+		return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder
+				.methodOn(RestauranteFormaDePagamentoController.class)
+				.desassociar(restauranteId, formaPagamentoId)).withRel(rel);
+		
+	}
+	
 	public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
 	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
 	            .abertura(restauranteId)).withRel(rel);

@@ -1,6 +1,7 @@
 package br.com.eduardo.algafood.api.openapi.controller;
 
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.FormaPagamentoDTO;
@@ -25,7 +26,7 @@ public interface RestauranteFormaDePagamentoControllerOpenApi {
         @ApiResponse(code = 204, message = "Desassociação realizada com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante ou forma de pagamento não encontrada")
     })
-	void desassociar(@ApiParam(example = "1", value = "Id de Restaurante", required = true)
+	ResponseEntity<Void> desassociar(@ApiParam(example = "1", value = "Id de Restaurante", required = true)
 	Long restauranteId,
 	@ApiParam(example = "1", value = "Id da forma de pagamento", required = true) Long formaPagamentoId);
 	

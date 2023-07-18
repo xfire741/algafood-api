@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,15 +37,25 @@ public class RestauranteFormaDePagamentoController implements RestauranteFormaDe
 	public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 	    
-	    return formaPagamentoAssembler.toCollectionModel(restaurante.getFormasPagamento())
+		CollectionModel<FormaPagamentoDTO> formasPagamentoDTO =
+				formaPagamentoAssembler.toCollectionModel(restaurante.getFormasPagamento())
 	            .removeLinks()
 	            .add(algaLinks.linkToRestauranteFormasPagamento(restauranteId));
+		
+		formasPagamentoDTO.getContent().forEach(formaPagamentoDTO -> {
+			formaPagamentoDTO.add(algaLinks.linkToRestauranteFormaPagamentoDesassociacao(
+					restauranteId, formaPagamentoDTO.getId(), "desassociar"));
+		});
+		
+		return formasPagamentoDTO;
 	}
 	
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
+	public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		cadastroRestaurante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/{formaPagamentoId}")
