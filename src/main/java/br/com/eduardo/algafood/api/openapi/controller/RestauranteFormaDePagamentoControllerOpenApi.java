@@ -35,7 +35,7 @@ public interface RestauranteFormaDePagamentoControllerOpenApi {
         @ApiResponse(code = 204, message = "Associação realizada com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante ou forma de pagamento não encontrada")
     })
-	void associar(@ApiParam(example = "1", value = "Id de Restaurante", required = true) Long restauranteId,
+	ResponseEntity<Void> associar(@ApiParam(example = "1", value = "Id de Restaurante", required = true) Long restauranteId,
 			@ApiParam(example = "1", value = "Id da forma de pagamento", required = true) Long formaPagamentoId);
 	
 }
