@@ -1,6 +1,7 @@
 package br.com.eduardo.algafood.api.openapi.controller;
 
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.UsuarioDTO;
@@ -27,7 +28,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
         @ApiResponse(code = 404, message = "Restaurante ou usuário não encontrado", 
             response = Problem.class)
     })
-    void disassociarUsuarioResponsavel(
+    ResponseEntity<Void> desassociar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true)
             Long restauranteId,
             
@@ -40,7 +41,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
         @ApiResponse(code = 404, message = "Restaurante ou usuário não encontrado", 
             response = Problem.class)
     })
-    void associarUsuarioResponsavel(
+    ResponseEntity<Void> associar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true)
             Long restauranteId,
             
