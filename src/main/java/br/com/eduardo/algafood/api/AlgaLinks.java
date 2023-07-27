@@ -18,6 +18,7 @@ import br.com.eduardo.algafood.api.controller.PedidoController;
 import br.com.eduardo.algafood.api.controller.RestauranteController;
 import br.com.eduardo.algafood.api.controller.RestauranteFormaDePagamentoController;
 import br.com.eduardo.algafood.api.controller.RestauranteProdutoController;
+import br.com.eduardo.algafood.api.controller.RestauranteProdutoFotoController;
 import br.com.eduardo.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import br.com.eduardo.algafood.api.controller.UsuarioController;
 import br.com.eduardo.algafood.api.controller.UsuarioGrupoController;
@@ -252,6 +253,15 @@ public class AlgaLinks {
 
 	public Link linkToProduto(Long restauranteId, Long produtoId) {
 	    return linkToProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
+	}
+	
+	public Link linkToFotoProduto(Long restauranteId, Long produtoId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteProdutoFotoController.class)
+	            .buscar(restauranteId, produtoId)).withRel(rel);
+	}
+
+	public Link linkToFotoProduto(Long restauranteId, Long produtoId) {
+	    return linkToFotoProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
 	}
 
 	public Link linkToCozinhas(String rel) {

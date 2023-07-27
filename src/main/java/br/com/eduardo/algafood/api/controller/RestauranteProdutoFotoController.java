@@ -67,43 +67,19 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 
 		FotoProduto fotoSalva = catalogoFotoProduto.salvar(foto, arquivo.getInputStream());
 
-		return fotoAssembler.toDTO(fotoSalva);
+		return fotoAssembler.toModel(fotoSalva);
 	}
 
 	@GetMapping(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
-												@RequestHeader(name="accept") String acceptHeader)
-			throws HttpMediaTypeNotAcceptableException  {
-		
-		if (acceptHeader.equals(MediaType.APPLICATION_JSON_VALUE)) {
-			return recuperarFoto(restauranteId, produtoId);
-		}
-		
-		try {
-			FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
-			MediaType mediaTypeFoto = MediaType.parseMediaType(fotoProduto.getContentType());
+	public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId)
+	{
+		FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
 			
-			List<MediaType> mediaTypeAceitas = MediaType.parseMediaTypes(acceptHeader);
-			verificarCompatibilidadeMediaType(mediaTypeFoto,mediaTypeAceitas);
-			var fotoRecuperada =  fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
-			if(fotoRecuperada.temUrl()) {
-				
-				return ResponseEntity
-						.status(HttpStatus.FOUND)
-						.header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
-						.build();
-			} else {
-				return ResponseEntity.ok()
-						.contentType(mediaTypeFoto)
-						.body(new InputStreamResource(fotoRecuperada.getInputStream()));
-			}	
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}	
+			return fotoAssembler.toModel(fotoProduto);
 	}
 	
 	public ResponseEntity<?> recuperarFoto(@PathVariable Long restauranteId,@PathVariable Long produtoId)  {
-		FotoProdutoDTO fotoProdutoDTO = fotoAssembler.toDTO(catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId));
+		FotoProdutoDTO fotoProdutoDTO = fotoAssembler.toModel(catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId));
 		return ResponseEntity.ok(fotoProdutoDTO);
 	}
 
