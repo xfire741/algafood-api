@@ -14,6 +14,8 @@ import br.com.eduardo.algafood.api.controller.CozinhaController;
 import br.com.eduardo.algafood.api.controller.EstadoController;
 import br.com.eduardo.algafood.api.controller.FluxoPedidoController;
 import br.com.eduardo.algafood.api.controller.FormaPagamentoController;
+import br.com.eduardo.algafood.api.controller.GrupoController;
+import br.com.eduardo.algafood.api.controller.GrupoPermissaoController;
 import br.com.eduardo.algafood.api.controller.PedidoController;
 import br.com.eduardo.algafood.api.controller.RestauranteController;
 import br.com.eduardo.algafood.api.controller.RestauranteFormaDePagamentoController;
@@ -271,5 +273,18 @@ public class AlgaLinks {
 	public Link linkToCozinhas() {
 	    return linkToCozinhas(IanaLinkRelations.SELF.value());
 	}
+	
+	public Link linkToGrupos(String rel) {
+	    return WebMvcLinkBuilder.linkTo(GrupoController.class).withRel(rel);
+	}
+
+	public Link linkToGrupos() {
+	    return linkToGrupos(IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToGrupoPermissoes(Long grupoId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class)
+	            .listar(grupoId)).withRel(rel);
+	} 
 	
 }

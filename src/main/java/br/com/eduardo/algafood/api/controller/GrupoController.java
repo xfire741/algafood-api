@@ -1,10 +1,9 @@
 package br.com.eduardo.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,12 +43,12 @@ public class GrupoController implements GrupoControllerOpenApi {
 	
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GrupoDTO buscar(@PathVariable Long id) {
-		return grupoModelAssembler.toDTO(cadastroGrupoService.buscarOuFalhar(id));
+		return grupoModelAssembler.toModel(cadastroGrupoService.buscarOuFalhar(id));
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<GrupoDTO> listar() {
-		return grupoModelAssembler.toCollectionDTO(grupoRepository.findAll());
+	public CollectionModel<GrupoDTO> listar() {
+		return grupoModelAssembler.toCollectionModel(grupoRepository.findAll());
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +56,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	public GrupoDTO adicionar(@RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInputDTO);
 		
-		return grupoModelAssembler.toDTO(cadastroGrupoService.salvar(grupo));
+		return grupoModelAssembler.toModel(cadastroGrupoService.salvar(grupo));
 	}
 	
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +64,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		Grupo grupo = cadastroGrupoService.buscarOuFalhar(id);
 		
 		grupoInputDisassembler.copyToDomainObject(grupoInputDTO, grupo);
-		return grupoModelAssembler.toDTO(cadastroGrupoService.salvar(grupo));
+		return grupoModelAssembler.toModel(cadastroGrupoService.salvar(grupo));
 	}
 	
 	@DeleteMapping("/{id}")
