@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Links;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.CozinhaDTO;
 import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
 import br.com.eduardo.algafood.api.openapi.model.CozinhasModelOpenApi;
+import br.com.eduardo.algafood.api.openapi.model.LinksModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.PageableModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -64,6 +66,7 @@ public class SpringFoxConfig {
 				.globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+				.directModelSubstitute(Links.class, LinksModelOpenApi.class)
 				.ignoredParameterTypes(ServletWebRequest.class,
 						URL.class, Uri.class, URLStreamHandler.class, Resource.class, File.class
 						,InputStream.class)
