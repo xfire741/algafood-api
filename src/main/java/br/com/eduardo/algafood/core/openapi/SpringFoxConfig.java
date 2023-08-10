@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Links;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,10 @@ import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
+import br.com.eduardo.algafood.api.model.CidadeDTO;
 import br.com.eduardo.algafood.api.model.CozinhaDTO;
 import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
+import br.com.eduardo.algafood.api.openapi.model.CidadesModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.CozinhasModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.LinksModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.PageableModelOpenApi;
@@ -77,6 +80,9 @@ public class SpringFoxConfig {
 	            .alternateTypeRules(AlternateTypeRules.newRule(
 	                    typeResolver.resolve(Page.class, PedidoResumoDTO.class),
 	                    PedidosResumoModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(CollectionModel.class, CidadeDTO.class),
+	                    CidadesModelOpenApi.class))
 	            .apiInfo(apiInfo())
 	            .tags(new Tag("Cidades", "Gerencia as cidades"),
 	                    new Tag("Grupos", "Gerencia os grupos de usuários"),
