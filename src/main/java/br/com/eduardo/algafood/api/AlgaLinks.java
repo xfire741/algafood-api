@@ -17,6 +17,7 @@ import br.com.eduardo.algafood.api.controller.FormaPagamentoController;
 import br.com.eduardo.algafood.api.controller.GrupoController;
 import br.com.eduardo.algafood.api.controller.GrupoPermissaoController;
 import br.com.eduardo.algafood.api.controller.PedidoController;
+import br.com.eduardo.algafood.api.controller.PermissaoController;
 import br.com.eduardo.algafood.api.controller.RestauranteController;
 import br.com.eduardo.algafood.api.controller.RestauranteFormaDePagamentoController;
 import br.com.eduardo.algafood.api.controller.RestauranteProdutoController;
@@ -47,6 +48,28 @@ public class AlgaLinks {
 	    
 	    return Link.of(UriTemplate.of(pedidosUrl, 
 	            PAGINACAO_VARIABLES.concat(filtroVariables)), rel);
+	}
+	
+	public Link linkToPermissoes(String rel) {
+	    return WebMvcLinkBuilder.linkTo(PermissaoController.class).withRel(rel);
+	}
+
+	public Link linkToPermissoes() {
+	    return linkToPermissoes(IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToGrupoPermissoes(Long grupoId) {
+	    return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToGrupoPermissaoAssociacao(Long grupoId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class)
+	            .associar(grupoId, null)).withRel(rel);
+	}
+
+	public Link linkToGrupoPermissaoDesassociacao(Long grupoId, Long permissaoId, String rel) {
+	    return WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GrupoPermissaoController.class)
+	            .desassociar(grupoId, permissaoId)).withRel(rel);
 	}
 	
 	public Link linkToRestauranteResponsavelDesassociacao(

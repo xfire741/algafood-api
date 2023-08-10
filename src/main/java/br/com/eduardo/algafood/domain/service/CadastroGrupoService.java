@@ -52,7 +52,7 @@ public class CadastroGrupoService {
 	}
 	
 	@Transactional
-	public void disassociarPermissao(Long grupoId, Long permissaoId) {
+	public void desassociarPermissao(Long grupoId, Long permissaoId) {
 		Grupo grupo = buscarOuFalhar(grupoId);
 		Permissao permissao = cadastroPermissaoService.buscarOuFalhar(permissaoId);
 		

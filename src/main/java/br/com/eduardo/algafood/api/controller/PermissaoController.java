@@ -1,10 +1,9 @@
 package br.com.eduardo.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +19,14 @@ import br.com.eduardo.algafood.api.assembler.PermissaoInputDisassembler;
 import br.com.eduardo.algafood.api.assembler.PermissaoModelAssembler;
 import br.com.eduardo.algafood.api.model.PermissaoDTO;
 import br.com.eduardo.algafood.api.model.input.PermissaoInputDTO;
+import br.com.eduardo.algafood.api.openapi.controller.PermissaoControllerOpenApi;
 import br.com.eduardo.algafood.domain.model.Permissao;
 import br.com.eduardo.algafood.domain.repository.PermissaoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroPermissaoService;
 
 @RestController
 @RequestMapping("/permissoes")
-public class PermissaoController {
+public class PermissaoController implements PermissaoControllerOpenApi {
 	
 	@Autowired
 	private PermissaoInputDisassembler disassembler;
@@ -42,12 +42,12 @@ public class PermissaoController {
 	
 	@GetMapping("/{id}")
 	public PermissaoDTO buscar(@PathVariable Long id) {
-		return assembler.toDTO(cadastroPermissaoService.buscarOuFalhar(id));
+		return assembler.toModel(cadastroPermissaoService.buscarOuFalhar(id));
 	}
 	
 	@GetMapping
-	public List<PermissaoDTO> listar() { 
-		return assembler.toCollectionDTO(permissaoRepository.findAll());
+	public CollectionModel<PermissaoDTO> listar() { 
+		return assembler.toCollectionModel(permissaoRepository.findAll());
 	}
 	
 	@PostMapping
@@ -56,7 +56,7 @@ public class PermissaoController {
 		
 		Permissao permissao = disassembler.toDomainObject(permissaoInputDTO);
 		
-		return assembler.toDTO(cadastroPermissaoService.salvar(permissao));
+		return assembler.toModel(cadastroPermissaoService.salvar(permissao));
 		
 	}
 	
@@ -68,7 +68,7 @@ public class PermissaoController {
 		
 		disassembler.copyToDomainObject(permissaoInputDTO, permissaoAtual);
 		
-		return assembler.toDTO(cadastroPermissaoService.salvar(permissaoAtual));
+		return assembler.toModel(cadastroPermissaoService.salvar(permissaoAtual));
 	}
 	
 	@DeleteMapping("/{id}")
