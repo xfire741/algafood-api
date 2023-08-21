@@ -29,6 +29,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import br.com.eduardo.algafood.api.exceptionhandler.Problem;
 import br.com.eduardo.algafood.api.model.CidadeDTO;
 import br.com.eduardo.algafood.api.model.CozinhaDTO;
+import br.com.eduardo.algafood.api.model.EstadoDTO;
 import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
 import br.com.eduardo.algafood.api.openapi.model.CidadesModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.CozinhasModelOpenApi;
@@ -78,6 +79,9 @@ public class SpringFoxConfig {
 	            .alternateTypeRules(AlternateTypeRules.newRule(
 	                    typeResolver.resolve(PagedModel.class, CozinhaDTO.class),
 	                    CozinhasModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(CollectionModel.class, EstadoDTO.class),
+	                    EstadosModelOpenApi.class))
 	            .alternateTypeRules(AlternateTypeRules.newRule(
 	                    typeResolver.resolve(Page.class, PedidoResumoDTO.class),
 	                    PedidosResumoModelOpenApi.class))
