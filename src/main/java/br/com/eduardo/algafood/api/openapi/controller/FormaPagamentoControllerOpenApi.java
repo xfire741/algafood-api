@@ -25,8 +25,11 @@ public interface FormaPagamentoControllerOpenApi {
 	ResponseEntity<FormaPagamentoDTO> buscar(
 			@ApiParam(value = "ID de uma forma de pagamento", example = "1", required = true) Long id, ServletWebRequest request);
 	
-	@ApiOperation(value = "Lista as formas de pagamento", response = FormasPagamentoModelOpenApi.class)
-	ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request);    
+	@ApiOperation(value = "Lista as formas de pagamento")
+	@io.swagger.annotations.ApiResponses(value = {
+	@io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = FormasPagamentoModelOpenApi.class)
+	})
+	ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request);  
 
 	
 	@ApiOperation("Cadastra uma forma de pagamento")
