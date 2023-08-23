@@ -35,6 +35,8 @@ import br.com.eduardo.algafood.api.model.GrupoDTO;
 import br.com.eduardo.algafood.api.model.PedidoResumoDTO;
 import br.com.eduardo.algafood.api.model.PermissaoDTO;
 import br.com.eduardo.algafood.api.model.ProdutoDTO;
+import br.com.eduardo.algafood.api.model.RestauranteBasicoModel;
+import br.com.eduardo.algafood.api.model.UsuarioDTO;
 import br.com.eduardo.algafood.api.openapi.model.CidadesModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.CozinhasModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.EstadosModelOpenApi;
@@ -45,6 +47,8 @@ import br.com.eduardo.algafood.api.openapi.model.PageableModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.PermissoesModelOpenApi;
 import br.com.eduardo.algafood.api.openapi.model.ProdutosModelOpenApi;
+import br.com.eduardo.algafood.api.openapi.model.RestaurantesBasicoModelOpenApi;
+import br.com.eduardo.algafood.api.openapi.model.UsuariosModelOpenApi;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -112,6 +116,13 @@ public class SpringFoxConfig {
 	            .alternateTypeRules(AlternateTypeRules.newRule(
 	            	    typeResolver.resolve(CollectionModel.class, ProdutoDTO.class),
 	            	    ProdutosModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	            	    typeResolver.resolve(CollectionModel.class, RestauranteBasicoModel.class),
+	            	    RestaurantesBasicoModelOpenApi.class))
+
+	            	.alternateTypeRules(AlternateTypeRules.newRule(
+	            	        typeResolver.resolve(CollectionModel.class, UsuarioDTO.class),
+	            	        UsuariosModelOpenApi.class))
 	            .apiInfo(apiInfo())
 	            .tags(new Tag("Cidades", "Gerencia as cidades"),
 	                    new Tag("Grupos", "Gerencia os grupos de usuários"),

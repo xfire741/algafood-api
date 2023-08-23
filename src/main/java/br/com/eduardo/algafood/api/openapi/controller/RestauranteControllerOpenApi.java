@@ -10,7 +10,6 @@ import br.com.eduardo.algafood.api.model.RestauranteApenasNomeModel;
 import br.com.eduardo.algafood.api.model.RestauranteBasicoModel;
 import br.com.eduardo.algafood.api.model.RestauranteDTO;
 import br.com.eduardo.algafood.api.model.input.RestauranteInputDTO;
-import br.com.eduardo.algafood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,11 +21,10 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerOpenApi {
 
-	@ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+	@ApiOperation(value = "Lista restaurantes")
 	@ApiImplicitParams({
-		@ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome", 
-				dataType = "java.lang.String",
-				name = "projecao", paramType = "query", type = "string")
+	    @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
+	            name = "projecao", paramType = "query", type = "string")
 	})
 	CollectionModel<RestauranteBasicoModel> listar();
 	
