@@ -69,13 +69,14 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SpringFoxConfig {
 
 	@Bean
-	public Docket apiDocket() {
+	public Docket apiDocketV1() {
 		TypeResolver typeResolver = new TypeResolver();
 		
 		return new Docket(DocumentationType.OAS_30)
+				.groupName("V1")
 				.select()
 					.apis(RequestHandlerSelectors.basePackage("br.com.eduardo.algafood.api"))
-					.paths(PathSelectors.any())
+					.paths(PathSelectors.ant("/v1/**"))
 					.build()
 				.useDefaultResponseMessages(false)
 				.globalResponses(HttpMethod.GET, globalGetResponseMessages())
@@ -123,7 +124,7 @@ public class SpringFoxConfig {
 	            	.alternateTypeRules(AlternateTypeRules.newRule(
 	            	        typeResolver.resolve(CollectionModel.class, UsuarioDTO.class),
 	            	        UsuariosModelOpenApi.class))
-	            .apiInfo(apiInfo())
+	            .apiInfo(apiInfoV1())
 	            .tags(new Tag("Cidades", "Gerencia as cidades"),
 	                    new Tag("Grupos", "Gerencia os grupos de usuários"),
 	                    new Tag("Cozinhas", "Gerencia as cozinhas"),
@@ -136,6 +137,31 @@ public class SpringFoxConfig {
 	                    new Tag("Estatísticas", "Estatísticas da AlgaFood"),
 	                    new Tag("Permissões", "Gerencia as permissões")
 	                    );
+	}
+	
+	@Bean
+	public Docket apiDocketV2() {
+		TypeResolver typeResolver = new TypeResolver();
+		
+		return new Docket(DocumentationType.OAS_30)
+				.groupName("V2")
+				.select()
+					.apis(RequestHandlerSelectors.basePackage("br.com.eduardo.algafood.api"))
+					.paths(PathSelectors.ant("/v2/**"))
+					.build()
+				.useDefaultResponseMessages(false)
+				.globalResponses(HttpMethod.GET, globalGetResponseMessages())
+				.globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
+				.globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
+				.globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+				.additionalModels(typeResolver.resolve(Problem.class))
+				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+				.directModelSubstitute(Links.class, LinksModelOpenApi.class)
+				.ignoredParameterTypes(ServletWebRequest.class,
+						URL.class, Uri.class, URLStreamHandler.class, Resource.class, File.class
+						,InputStream.class)
+	            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+	            .apiInfo(apiInfoV2());
 	}
 	
 	private List<Response> globalGetResponseMessages() {
@@ -194,11 +220,21 @@ public class SpringFoxConfig {
 		      	  	.build());
 		}
 	
-	private ApiInfo apiInfo() {
+	private ApiInfo apiInfoV1() {
 		return new ApiInfoBuilder()
 				.title("AlgaFood API")
 				.description("API aberta para clientes e restaurantes")
 				.version("1")
+				.contact(new Contact("Eduardo",
+						"https://github.com/xfire741", "eduardovictor28@gmail.com"))
+				.build();
+	}
+	
+	private ApiInfo apiInfoV2() {
+		return new ApiInfoBuilder()
+				.title("AlgaFood API")
+				.description("API aberta para clientes e restaurantes")
+				.version("2")
 				.contact(new Contact("Eduardo",
 						"https://github.com/xfire741", "eduardovictor28@gmail.com"))
 				.build();
