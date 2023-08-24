@@ -1,4 +1,4 @@
-package br.com.eduardo.algafood.api.v1.model.input;
+package br.com.eduardo.algafood.api.v2.model.input;
 
 import javax.validation.constraints.NotBlank;
 
@@ -8,10 +8,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CozinhaInputDTO {
+public class CozinhaInputDTOV2 {
 
 	@ApiModelProperty(example = "Brasileira", required = true)
 	@NotBlank
-	private String nome;
+	private String nomeCozinha;
 	
 }
