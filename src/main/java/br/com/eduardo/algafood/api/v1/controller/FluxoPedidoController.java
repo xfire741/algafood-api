@@ -13,7 +13,7 @@ import br.com.eduardo.algafood.api.v1.openapi.controller.FluxoPedidoControllerOp
 import br.com.eduardo.algafood.domain.service.FluxoPedidoService;
 
 @RestController
-@RequestMapping("/pedidos/{codigoPedido}")
+@RequestMapping("/v1/pedidos/{codigoPedido}")
 public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
 
 	@Autowired

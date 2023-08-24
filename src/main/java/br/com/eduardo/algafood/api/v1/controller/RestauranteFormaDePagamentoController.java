@@ -21,7 +21,7 @@ import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/formas-pagamento")
+@RequestMapping("/v1/restaurantes/{restauranteId}/formas-pagamento")
 public class RestauranteFormaDePagamentoController implements RestauranteFormaDePagamentoControllerOpenApi {
 	
 	@Autowired

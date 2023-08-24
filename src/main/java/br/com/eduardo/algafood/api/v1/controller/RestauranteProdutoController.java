@@ -31,7 +31,7 @@ import br.com.eduardo.algafood.domain.service.CadastroProdutoService;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos")
+@RequestMapping("/v1/restaurantes/{restauranteId}/produtos")
 public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 	
 	@Autowired

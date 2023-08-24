@@ -20,7 +20,7 @@ import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.service.CadastroUsuarioService;
 
 @RestController
-@RequestMapping("/usuarios/{usuarioId}/grupos")
+@RequestMapping("/v1/usuarios/{usuarioId}/grupos")
 public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 	
 	@Autowired

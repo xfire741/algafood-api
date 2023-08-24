@@ -20,7 +20,7 @@ import br.com.eduardo.algafood.domain.service.VendaReportService;
 import br.com.eduardo.algafood.infraestructure.service.query.VendaQueryServiceImpl;
 
 @RestController
-@RequestMapping(path = "/estatisticas")
+@RequestMapping(path = "/v1/estatisticas")
 public class EstatisticasController implements EstatisticasControllerOpenApi {
 	
 	@Autowired

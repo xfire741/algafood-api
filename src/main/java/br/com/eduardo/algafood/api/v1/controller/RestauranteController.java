@@ -37,7 +37,7 @@ import br.com.eduardo.algafood.domain.repository.RestauranteRepository;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping("/restaurantes")
+@RequestMapping("/v1/restaurantes")
 public class RestauranteController implements RestauranteControllerOpenApi {
 	
 	@Autowired
