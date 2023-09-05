@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import br.com.eduardo.algafood.api.v2.assembler.CidadeInputDisassemblerV2;
 import br.com.eduardo.algafood.api.v2.assembler.CidadeModelAssemblerV2;
 import br.com.eduardo.algafood.api.v2.model.CidadeDTOV2;
 import br.com.eduardo.algafood.api.v2.model.input.CidadeInputDTOV2;
+import br.com.eduardo.algafood.api.v2.openapi.CidadeControllerV2OpenApi;
 import br.com.eduardo.algafood.domain.exception.EstadoNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Cidade;
@@ -28,7 +30,7 @@ import br.com.eduardo.algafood.domain.service.CadastroCidadeService;
 
 @RestController
 @RequestMapping("/v2/cidades")
-public class CidadeControllerV2 {
+public class CidadeControllerV2 implements CidadeControllerV2OpenApi{
 
 	@Autowired
 	private CidadeInputDisassemblerV2 cidadeInputDisassembler;
@@ -91,5 +93,10 @@ public class CidadeControllerV2 {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
-
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@DeleteMapping("/{id}")
+	public void remover(@PathVariable Long id) {
+		cadastroCidade.excluir(id);
+	}
 }

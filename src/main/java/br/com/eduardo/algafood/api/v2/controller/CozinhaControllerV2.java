@@ -24,13 +24,14 @@ import br.com.eduardo.algafood.api.v2.assembler.CozinhaInputDisassemblerV2;
 import br.com.eduardo.algafood.api.v2.assembler.CozinhaModelAssemblerV2;
 import br.com.eduardo.algafood.api.v2.model.CozinhaDTOV2;
 import br.com.eduardo.algafood.api.v2.model.input.CozinhaInputDTOV2;
+import br.com.eduardo.algafood.api.v2.openapi.CozinhaControllerV2OpenApi;
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/v2/cozinhas")
-public class CozinhaControllerV2 {
+public class CozinhaControllerV2 implements CozinhaControllerV2OpenApi {
 
 	@Autowired
 	private CozinhaInputDisassemblerV2 cozinhaInputDisassembler;
