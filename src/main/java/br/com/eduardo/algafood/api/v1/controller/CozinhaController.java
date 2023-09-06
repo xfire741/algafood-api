@@ -28,11 +28,15 @@ import br.com.eduardo.algafood.api.v1.openapi.controller.CozinhaControllerOpenAp
 import br.com.eduardo.algafood.domain.model.Cozinha;
 import br.com.eduardo.algafood.domain.repository.CozinhaRepository;
 import br.com.eduardo.algafood.domain.service.CadastroCozinhaService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/cozinhas")
 public class CozinhaController implements CozinhaControllerOpenApi {
 
+	//private static final Logger logger = LoggerFactory.getLogger(CozinhaController.class);
+	
 	@Autowired
 	private CozinhaInputDisassembler cozinhaInputDisassembler;
 	
@@ -50,6 +54,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public PagedModel<CozinhaDTO> listar(@PageableDefault(size = 2) Pageable pageable) {
+		log.info("Listando Cozinhas...");
+		
 		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 		
 		PagedModel<CozinhaDTO> cozinhasPagedModel = pagedResourcesAssembler
