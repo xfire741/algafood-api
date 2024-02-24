@@ -29,6 +29,7 @@ import br.com.eduardo.algafood.api.v1.model.input.PedidoInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import br.com.eduardo.algafood.core.data.PageWrapper;
 import br.com.eduardo.algafood.core.data.PageableTranslator;
+import br.com.eduardo.algafood.core.security.AlgaSecurity;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.filter.PedidoFilter;
@@ -44,79 +45,76 @@ import io.swagger.annotations.ApiImplicitParams;
 @RequestMapping("/v1/pedidos")
 public class PedidoController implements PedidoControllerOpenApi {
 
-	
-	
 	@Autowired
 	private PedidoInputDisassembler pedidoInputDisassembler;
-	
+
 	@Autowired
 	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
-	
+
 	@Autowired
 	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
-	
+
 	@Autowired
 	private PedidoModelAssembler assembler;
-	
+
 	@Autowired
 	private PedidoRepository pedidoRepository;
-	
+
 	@Autowired
 	private EmissaoPedidoService cadastroPedidoService;
-	
+
+	@Autowired
+	private AlgaSecurity algaSecurity;
+
 	@ApiImplicitParams({
-		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-				name = "campos", paramType = "query", type = "string")
+			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
 	})
 	@GetMapping(path = "/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PedidoDTO buscar(@PathVariable String codigoPedido) {
 		return assembler.toModel(cadastroPedidoService.buscarOuFalhar(codigoPedido));
 	}
-	
+
 	@Override
 	@ApiImplicitParams({
-		@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-				name = "campos", paramType = "query", type = "string")
+			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
 	})
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, 
-	        @PageableDefault(size = 10) Pageable pageable) {
+	public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro,
+			@PageableDefault(size = 10) Pageable pageable) {
 		Pageable pageableTraduzido = traduzirPageable(pageable);
-	    
-	    Page<Pedido> pedidosPage = pedidoRepository.findAll(
-	            PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
-	    
-	    pedidosPage = new PageWrapper<>(pedidosPage, pageable);
-	    
-	    return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
+
+		Page<Pedido> pedidosPage = pedidoRepository.findAll(
+				PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+
+		pedidosPage = new PageWrapper<>(pedidosPage, pageable);
+
+		return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
-	
+
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoDTO adicionar(@Valid @RequestBody PedidoInputDTO pedidoInput) {
-	    try {
-	        Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
+		try {
+			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-	        // TODO pegar usuário autenticado
-	        novoPedido.setCliente(new Usuario());
-	        novoPedido.getCliente().setId(1L);
+			novoPedido.setCliente(new Usuario());
+			novoPedido.getCliente().setId(algaSecurity.getUsuarioId());
 
-	        novoPedido = cadastroPedidoService.emitir(novoPedido);
+			novoPedido = cadastroPedidoService.emitir(novoPedido);
 
-	        return assembler.toModel(novoPedido);
-	    } catch (EntidadeNaoEncontradaException e) {
-	        throw new NegocioException(e.getMessage(), e);
-	    }
+			return assembler.toModel(novoPedido);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	}
-	
+
 	private Pageable traduzirPageable(Pageable apiPeageable) {
 		var mapeamento = ImmutableMap.of(
 				"codigo", "codigo",
 				"nomeRestaurante.nome", "restaurante.nome",
 				"nomeCliente", "cliente.nome",
-				"valorTotal", "valorTotal"
-				);
+				"valorTotal", "valorTotal");
 		return PageableTranslator.translate(apiPeageable, mapeamento);
 	}
-	
+
 }
