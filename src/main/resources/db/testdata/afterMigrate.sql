@@ -116,13 +116,13 @@ select 4, id from permissao where nome like '%_RESTAURANTES' or nome like '%_PRO
 insert into usuario (id, nome, email, senha, data_cadastro) values
 (1, 'João da Silva', 'joao.ger@algafood.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
 (2, 'Maria Joaquina', 'maria.vnd@algafood.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
-(3, 'José Souza', 'jose.aux@algafood.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
+(3, 'José Souza', 'jose.aux@algafood.com', '$2a$ 12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
 (4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
 (5, 'Manoel Lima', 'manoel.loja@gmail.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
 (6, 'Débora Mendonça', 'eduardovictor28@gmail.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp),
 (7, 'Carlos Lima', 'email.teste.eduardovictor28+carlos@gmail.com', '$2a$12$YBKGf9nBIHx5ITugw6sxvOHT9/jdryi4000BfjY2ZmTQtrCbzMmTO', utc_timestamp);
 
-insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
+insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2), (3, 3), (4, 4);
 
 insert into restaurante_usuario_responsavel (restaurante_id, usuario_id) values (1, 5), (3, 5);
 
