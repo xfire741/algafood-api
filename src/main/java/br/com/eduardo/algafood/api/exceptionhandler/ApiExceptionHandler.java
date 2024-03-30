@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -166,7 +167,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Problem problem = createProblemBuilder(status, problemType, detail, OffsetDateTime.now()).userMessage(detail).build();
 		
-		return handleExceptionInternal(e, problem, 
+		return handleExceptionInternal(e, problem,
 				new HttpHeaders(), status, request);
 		
 	}
@@ -235,7 +236,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<Object> handleUncaughtzs(EntidadeEmUsoException ex, WebRequest request) {
+	protected ResponseEntity<Object> handleUncaughts(EntidadeEmUsoException ex, WebRequest request) {
 		
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		ProblemType problemType = ProblemType.ERRO_SISTEMA;
@@ -249,6 +250,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 		
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	protected ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e, WebRequest request) {
+		HttpStatus status = HttpStatus.FORBIDDEN;
+		ProblemType problemType = ProblemType.ACESSO_NEGADO;
+		String detail = e.getMessage();
+
+		Problem problem = createProblemBuilder(status, problemType, detail, OffsetDateTime.now()).userMessage(detail).build();
+
+		return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
 	}
 	
 	@Override
