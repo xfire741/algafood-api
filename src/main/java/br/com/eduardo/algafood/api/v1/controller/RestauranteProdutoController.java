@@ -24,6 +24,7 @@ import br.com.eduardo.algafood.api.v1.assembler.ProdutoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.ProdutoDTO;
 import br.com.eduardo.algafood.api.v1.model.input.ProdutoInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.RestauranteProdutoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Produto;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.repository.ProdutoRepository;
@@ -33,68 +34,72 @@ import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 @RestController
 @RequestMapping("/v1/restaurantes/{restauranteId}/produtos")
 public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
-	
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	private ProdutoInputDisassembler produtoInputDisassembler;
-	
+
 	@Autowired
 	private CadastroProdutoService cadastroProdutoService;
-	
+
 	@Autowired
 	private CadastroRestauranteService cadastroRestauranteService;
-	
+
 	@Autowired
 	private ProdutoModelAssembler produtoModelAssembler;
-	
+
 	@Autowired
 	private AlgaLinks algaLinks;
-	
+
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId, 
+	public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId,
 			@RequestParam(required = false, defaultValue = "false") Boolean incluirInativos) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-	    
-	    List<Produto> todosProdutos = null;
-	    
-	    if (incluirInativos) {
-	        todosProdutos = produtoRepository.findAllByRestaurante(restaurante);
-	    } else {
-	        todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
-	    }
-	    
-	    return produtoModelAssembler.toCollectionModel(todosProdutos)
-	            .add(algaLinks.linkToProdutos(restauranteId));
+
+		List<Produto> todosProdutos = null;
+
+		if (incluirInativos) {
+			todosProdutos = produtoRepository.findAllByRestaurante(restaurante);
+		} else {
+			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+		}
+
+		return produtoModelAssembler.toCollectionModel(todosProdutos)
+				.add(algaLinks.linkToProdutos(restauranteId));
 	}
-	
+
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping(path = "/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
-		
+
 		return produtoModelAssembler.toModel(produto);
 	}
-	
+
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ProdutoDTO adicionarProduto(@PathVariable Long restauranteId, 
+	public ProdutoDTO adicionarProduto(@PathVariable Long restauranteId,
 			@RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
-		
+
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 		Produto produto = produtoInputDisassembler.toDomainObject(produtoInputDTO);
-		
+
 		produto.setRestaurante(restaurante);
-		
-			return produtoModelAssembler.toModel(cadastroProdutoService.salvar(produto));
+
+		return produtoModelAssembler.toModel(cadastroProdutoService.salvar(produto));
 	}
-	
+
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PutMapping(path = "/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ProdutoDTO atualizarProduto(@PathVariable Long restauranteId, 
+	public ProdutoDTO atualizarProduto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
 		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
 		produtoInputDisassembler.copyToDomainObject(produtoInputDTO, produto);
 		return produtoModelAssembler.toModel(cadastroProdutoService.salvar(produto));
 	}
-	
+
 }

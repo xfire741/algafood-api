@@ -17,6 +17,7 @@ import br.com.eduardo.algafood.api.v1.AlgaLinks;
 import br.com.eduardo.algafood.api.v1.assembler.FormaPagamentoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.FormaPagamentoDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.RestauranteFormaDePagamentoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
 
@@ -33,6 +34,7 @@ public class RestauranteFormaDePagamentoController implements RestauranteFormaDe
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
@@ -51,6 +53,7 @@ public class RestauranteFormaDePagamentoController implements RestauranteFormaDe
 		return formasPagamentoDTO;
 	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
@@ -59,6 +62,7 @@ public class RestauranteFormaDePagamentoController implements RestauranteFormaDe
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {

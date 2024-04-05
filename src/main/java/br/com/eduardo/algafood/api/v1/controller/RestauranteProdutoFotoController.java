@@ -27,6 +27,7 @@ import br.com.eduardo.algafood.api.v1.assembler.FotoProdutoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.FotoProdutoDTO;
 import br.com.eduardo.algafood.api.v1.model.input.FotoProdutoInput;
 import br.com.eduardo.algafood.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.model.FotoProduto;
 import br.com.eduardo.algafood.domain.model.Produto;
@@ -51,6 +52,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	@Autowired
 	private FotoStorageService fotoStorageService;
 
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 			@Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo) throws IOException {
@@ -70,6 +72,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return fotoAssembler.toModel(fotoSalva);
 	}
 
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId)
 	{
@@ -83,6 +86,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return ResponseEntity.ok(fotoProdutoDTO);
 	}
 
+	@CheckSecurity.Restaurantes.PodeEditar
 	@GetMapping
 	public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
@@ -121,6 +125,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		
 	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removerFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
