@@ -79,7 +79,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return produtoModelAssembler.toModel(produto);
 	}
 
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO adicionarProduto(@PathVariable Long restauranteId,
@@ -93,7 +93,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return produtoModelAssembler.toModel(cadastroProdutoService.salvar(produto));
 	}
 
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PutMapping(path = "/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ProdutoDTO atualizarProduto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {

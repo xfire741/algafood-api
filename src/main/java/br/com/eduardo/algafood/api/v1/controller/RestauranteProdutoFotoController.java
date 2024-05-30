@@ -52,7 +52,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	@Autowired
 	private FotoStorageService fotoStorageService;
 
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 			@Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo) throws IOException {
@@ -86,7 +86,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return ResponseEntity.ok(fotoProdutoDTO);
 	}
 
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@GetMapping
 	public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
@@ -125,7 +125,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		
 	}
 	
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removerFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId) {

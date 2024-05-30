@@ -27,5 +27,7 @@ extends CustomJpaRepository<Restaurante, Long>, RestauranteRepositoryQueries, Jp
 	Optional<Restaurante> findFirstRestauranteByNomeContaining(String nome);
 	
 	List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
+
+	boolean existsResponsavel(Long restauranteId, Long usuarioId);
 	
 }
