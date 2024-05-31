@@ -24,7 +24,7 @@ public class AlgaSecurity {
         return jwt.getClaim("usuario_id");
     }
 
-    public boolean gerenciarRestaurantes(Long restauranteId) {
+    public boolean gerenciaRestaurante(Long restauranteId) {
         return restauranteRepository.existsResponsavel(restauranteId, getUsuarioId());
     }
 

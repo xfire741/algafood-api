@@ -30,6 +30,7 @@ import br.com.eduardo.algafood.api.v1.openapi.controller.PedidoControllerOpenApi
 import br.com.eduardo.algafood.core.data.PageWrapper;
 import br.com.eduardo.algafood.core.data.PageableTranslator;
 import br.com.eduardo.algafood.core.security.AlgaSecurity;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.filter.PedidoFilter;
@@ -69,6 +70,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	@ApiImplicitParams({
 			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
 	})
+	@CheckSecurity.Pedidos.PodeBuscar
 	@GetMapping(path = "/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PedidoDTO buscar(@PathVariable String codigoPedido) {
 		return assembler.toModel(cadastroPedidoService.buscarOuFalhar(codigoPedido));
