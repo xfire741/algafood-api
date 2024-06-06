@@ -39,8 +39,6 @@ import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.repository.PedidoRepository;
 import br.com.eduardo.algafood.domain.service.EmissaoPedidoService;
 import br.com.eduardo.algafood.infraestructure.repository.spec.PedidoSpecs;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 
 @RestController
 @RequestMapping("/v1/pedidos")
@@ -67,9 +65,6 @@ public class PedidoController implements PedidoControllerOpenApi {
 	@Autowired
 	private AlgaSecurity algaSecurity;
 
-	@ApiImplicitParams({
-			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
-	})
 	@CheckSecurity.Pedidos.PodeBuscar
 	@GetMapping(path = "/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PedidoDTO buscar(@PathVariable String codigoPedido) {
@@ -91,6 +86,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 		return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
 
+	@CheckSecurity.Pedidos.PodeCriar
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoDTO adicionar(@Valid @RequestBody PedidoInputDTO pedidoInput) {
