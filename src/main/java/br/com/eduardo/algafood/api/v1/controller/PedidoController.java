@@ -77,9 +77,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	}
 
 	@Override
-	@ApiImplicitParams({
-			@ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula", name = "campos", paramType = "query", type = "string")
-	})
+	@CheckSecurity.Pedidos.PodePesquisar
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro,
 			@PageableDefault(size = 10) Pageable pageable) {
