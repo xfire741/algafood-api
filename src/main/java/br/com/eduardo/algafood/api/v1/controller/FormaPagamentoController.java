@@ -28,6 +28,7 @@ import br.com.eduardo.algafood.api.v1.assembler.FormaPagamentoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.FormaPagamentoDTO;
 import br.com.eduardo.algafood.api.v1.model.input.FormaPagamentoInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.FormaPagamentoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.FormaPagamento;
 import br.com.eduardo.algafood.domain.repository.FormaPagamentoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroFormaPagamentoService;
@@ -48,6 +49,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 	
+	@CheckSecurity.FormasPagamento.PodeConsultar
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long id, ServletWebRequest request) {
 		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -64,38 +66,40 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 			return null;
 		}
 		
-		FormaPagamentoDTO formaPagamento = 
+		FormaPagamentoDTO formaPagamento =
 				assembler.toModel(cadastroFormaPagamentoService.buscarOuFalhar(id));
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
 				.body(formaPagamento);
 	}
 	
+	@CheckSecurity.FormasPagamento.PodeConsultar
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request) {
 		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
-		
+
 		String eTag = "0";
-		
+
 		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
-		
+
 		if (dataUltimaAtualizacao != null) {
 			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
 		}
-		
+
 		if (request.checkNotModified(eTag)) {
 			return null;
 		}
-	  	
-	  	CollectionModel<FormaPagamentoDTO> formasPagamentosModel = 
-	  		    assembler.toCollectionModel(formaPagamentoRepository.findAll());
-	  	
-	  	return ResponseEntity.ok()
-	  			.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
-	  			.eTag(eTag)
-	  			.body(formasPagamentosModel);
+
+		CollectionModel<FormaPagamentoDTO> formasPagamentosModel = assembler
+				.toCollectionModel(formaPagamentoRepository.findAll());
+
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+				.eTag(eTag)
+				.body(formasPagamentosModel);
 	}
-	
+
+	@CheckSecurity.FormasPagamento.PodeEditar
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public FormaPagamentoDTO salvar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
@@ -103,6 +107,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 		return assembler.toModel(cadastroFormaPagamentoService.salvar(formaPagamento));
 	}
 	
+	@CheckSecurity.FormasPagamento.PodeEditar
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public FormaPagamentoDTO atualizar(@PathVariable Long id, 
 			@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
@@ -113,6 +118,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 		return assembler.toModel(cadastroFormaPagamentoService.salvar(formaPagamento));
 	}
 	
+	@CheckSecurity.FormasPagamento.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long id) {
