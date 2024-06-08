@@ -21,6 +21,7 @@ import br.com.eduardo.algafood.api.v1.assembler.EstadoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.EstadoDTO;
 import br.com.eduardo.algafood.api.v1.model.input.EstadoInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.EstadoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Estado;
 import br.com.eduardo.algafood.domain.repository.EstadoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroEstadoService;
@@ -41,16 +42,19 @@ public class EstadoController implements EstadoControllerOpenApi {
 	@Autowired
 	private EstadoRepository estadoRepository;
 
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public CollectionModel<EstadoDTO> listar(){
 		return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
 	}
 	
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public EstadoDTO buscar(@PathVariable Long id) {
 		return estadoModelAssembler.toModel(cadastroEstado.buscarOuFalhar(id));
 	}
 	
+	@CheckSecurity.Estados.PodeEditar
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Estado adicionar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
@@ -59,11 +63,13 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return cadastroEstado.salvar(estado);
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@DeleteMapping("/{id}")
 	public void remover(@PathVariable Long id) {
 			cadastroEstado.excluir(id);
 	}
 	
+	@CheckSecurity.Estados.PodeEditar
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(id);

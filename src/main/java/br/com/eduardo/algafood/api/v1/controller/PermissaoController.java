@@ -20,6 +20,7 @@ import br.com.eduardo.algafood.api.v1.assembler.PermissaoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.PermissaoDTO;
 import br.com.eduardo.algafood.api.v1.model.input.PermissaoInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.PermissaoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Permissao;
 import br.com.eduardo.algafood.domain.repository.PermissaoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroPermissaoService;
@@ -40,11 +41,13 @@ public class PermissaoController implements PermissaoControllerOpenApi {
 	@Autowired
 	private CadastroPermissaoService cadastroPermissaoService;
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping("/{id}")
 	public PermissaoDTO buscar(@PathVariable Long id) {
 		return assembler.toModel(cadastroPermissaoService.buscarOuFalhar(id));
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public CollectionModel<PermissaoDTO> listar() { 
 		return assembler.toCollectionModel(permissaoRepository.findAll());

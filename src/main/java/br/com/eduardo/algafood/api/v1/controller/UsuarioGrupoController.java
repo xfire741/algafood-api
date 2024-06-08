@@ -16,55 +16,59 @@ import br.com.eduardo.algafood.api.v1.AlgaLinks;
 import br.com.eduardo.algafood.api.v1.assembler.GrupoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.GrupoDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.service.CadastroUsuarioService;
 
 @RestController
 @RequestMapping("/v1/usuarios/{usuarioId}/grupos")
 public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
-	
+
 	@Autowired
 	private AlgaLinks algaLinks;
-	
+
 	@Autowired
 	private GrupoModelAssembler grupoAssembler;
-	
+
 	@Autowired
 	private CadastroUsuarioService cadastroUsuarioService;
-	
+
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@Override
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
-	    Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
-	    
-	    CollectionModel<GrupoDTO> gruposModel = grupoAssembler.toCollectionModel(usuario.getGrupos())
-	            .removeLinks()
-	            .add(algaLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
-	    
-	    gruposModel.getContent().forEach(grupoModel -> {
-	        grupoModel.add(algaLinks.linkToUsuarioGrupoDesassociacao(
-	                usuarioId, grupoModel.getId(), "desassociar"));
-	    });
-	    
-	    return gruposModel;
-	} 
-	
+		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+
+		CollectionModel<GrupoDTO> gruposModel = grupoAssembler.toCollectionModel(usuario.getGrupos())
+				.removeLinks()
+				.add(algaLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
+
+		gruposModel.getContent().forEach(grupoModel -> {
+			grupoModel.add(algaLinks.linkToUsuarioGrupoDesassociacao(
+					usuarioId, grupoModel.getId(), "desassociar"));
+		});
+
+		return gruposModel;
+	}
+
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@Override
 	@PutMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
 		cadastroUsuarioService.associarGrupo(grupoId, usuarioId);
-		
+
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@Override
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
 		cadastroUsuarioService.disassociarGrupo(grupoId, usuarioId);
-		
+
 		return ResponseEntity.noContent().build();
 	}
-	
+
 }

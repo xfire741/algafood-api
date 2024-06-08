@@ -21,6 +21,7 @@ import br.com.eduardo.algafood.api.v1.assembler.GrupoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.GrupoDTO;
 import br.com.eduardo.algafood.api.v1.model.input.GrupoInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.GrupoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Grupo;
 import br.com.eduardo.algafood.domain.repository.GrupoRepository;
 import br.com.eduardo.algafood.domain.service.CadastroGrupoService;
@@ -41,16 +42,19 @@ public class GrupoController implements GrupoControllerOpenApi {
 	@Autowired
 	private CadastroGrupoService cadastroGrupoService;
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GrupoDTO buscar(@PathVariable Long id) {
 		return grupoModelAssembler.toModel(cadastroGrupoService.buscarOuFalhar(id));
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public CollectionModel<GrupoDTO> listar() {
 		return grupoModelAssembler.toCollectionModel(grupoRepository.findAll());
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoDTO adicionar(@RequestBody @Valid GrupoInputDTO grupoInputDTO) {
@@ -59,6 +63,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoModelAssembler.toModel(cadastroGrupoService.salvar(grupo));
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GrupoDTO atualizar(@PathVariable Long id, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupo = cadastroGrupoService.buscarOuFalhar(id);
@@ -67,6 +72,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoModelAssembler.toModel(cadastroGrupoService.salvar(grupo));
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long id) {

@@ -22,6 +22,7 @@ import br.com.eduardo.algafood.api.v1.assembler.CidadeModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.CidadeDTO;
 import br.com.eduardo.algafood.api.v1.model.input.CidadeInputDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.exception.EstadoNaoEncontradaException;
 import br.com.eduardo.algafood.domain.exception.NegocioException;
 import br.com.eduardo.algafood.domain.model.Cidade;
@@ -44,18 +45,21 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
 
+	@CheckSecurity.Cidades.PodeConsultar
 	@Deprecated
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public CollectionModel<CidadeDTO> listar() {
-		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll()); 
+		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 		
 	}
 
+	@CheckSecurity.Cidades.PodeConsultar
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public CidadeDTO buscar(@PathVariable Long id) {
 		return cidadeModelAssembler.toModel(cadastroCidade.buscarOuFalhar(id));
 	}
 
+	@CheckSecurity.Cidades.PodeEditar
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
@@ -73,14 +77,16 @@ public class CidadeController implements CidadeControllerOpenApi {
 		}
 	}
 
+	@CheckSecurity.Cidades.PodeEditar
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void remover(@PathVariable Long id) {
 		cadastroCidade.excluir(id);
 	}
 
+	@CheckSecurity.Cidades.PodeEditar
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public CidadeDTO atualizar(@PathVariable Long id, 
+	public CidadeDTO atualizar(@PathVariable Long id,
 			@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
