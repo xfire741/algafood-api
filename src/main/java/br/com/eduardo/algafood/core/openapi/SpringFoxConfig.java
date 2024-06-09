@@ -61,10 +61,14 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.HttpAuthenticationScheme;
 import springfox.documentation.service.Response;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -123,19 +127,23 @@ public class SpringFoxConfig {
 						new Tag("Produtos", "Gerencia os produtos de restaurantes"),
 						new Tag("Usuários", "Gerencia os usuários"),
 						new Tag("Estatísticas", "Estatísticas da AlgaFood"),
-						new Tag("Permissões", "Gerencia as permissões"));
+						new Tag("Permissões", "Gerencia as permissões"))
+				.securityContexts(Arrays.asList(securityContext()))
+				.securitySchemes(List.of(authenticationScheme()))
+				.securityContexts(List.of(securityContext()));
+				
 	}
 
 	@Bean
 	public Docket apiDocketV2() {
 		TypeResolver typeResolver = new TypeResolver();
-		
+
 		return new Docket(DocumentationType.OAS_30)
 				.groupName("V2")
 				.select()
-					.apis(RequestHandlerSelectors.basePackage("br.com.eduardo.algafood.api"))
-					.paths(PathSelectors.ant("/v2/**"))
-					.build()
+				.apis(RequestHandlerSelectors.basePackage("br.com.eduardo.algafood.api"))
+				.paths(PathSelectors.ant("/v2/**"))
+				.build()
 				.useDefaultResponseMessages(false)
 				.globalResponses(HttpMethod.GET, globalGetResponseMessages())
 				.globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
@@ -145,23 +153,25 @@ public class SpringFoxConfig {
 				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
 				.directModelSubstitute(Links.class, LinksModelOpenApi.class)
 				.ignoredParameterTypes(ServletWebRequest.class,
-						URL.class, Uri.class, URLStreamHandler.class, Resource.class, File.class
-						,InputStream.class)
-	            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-	            .alternateTypeRules(AlternateTypeRules.newRule(
-	            	    typeResolver.resolve(PagedModel.class, CozinhaDTOV2.class),
-	            	    CidadesModelV2OpenApi.class))
+						URL.class, Uri.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class)
+				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+				.alternateTypeRules(AlternateTypeRules.newRule(
+						typeResolver.resolve(PagedModel.class, CozinhaDTOV2.class),
+						CidadesModelV2OpenApi.class))
 
-	            .alternateTypeRules(AlternateTypeRules.newRule(
+				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(PagedModel.class, CozinhaDTOV2.class),
 						CozinhasModelV2OpenApi.class))
-				
+
 				.alternateTypeRules(AlternateTypeRules.newRule(
 						typeResolver.resolve(CollectionModel.class, CidadeDTOV2.class),
 						CidadesModelV2OpenApi.class))
-				
+				.securityContexts(Arrays.asList(securityContext()))
+				.securitySchemes(List.of(authenticationScheme()))
+				.securityContexts(List.of(securityContext()))
+
 				.apiInfo(apiInfoV2())
-						
+
 				.tags(new Tag("Cidades", "Gerencia as cidades"),
 						new Tag("Cozinhas", "Gerencia as cozinhas"));
 	}
@@ -217,6 +227,22 @@ public class SpringFoxConfig {
 	private Consumer<RepresentationBuilder> getProblemaModelReference() {
 		return r -> r.model(m -> m.name("Problema").referenceModel(ref -> ref.key(k -> k.qualifiedModelName(
 				q -> q.name("Problema").namespace("br.com.eduardo.algafood.api.exceptionhandler")))));
+	}
+
+	private SecurityContext securityContext() {
+		return SecurityContext.builder()
+				.securityReferences(securityReference()).build();
+	}
+
+	private List<SecurityReference> securityReference() {
+		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+		authorizationScopes[0] = authorizationScope;
+		return List.of(new SecurityReference("Authorization", authorizationScopes));
+	}
+
+	private HttpAuthenticationScheme authenticationScheme() {
+		return HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("Authorization").build();
 	}
 
 }
