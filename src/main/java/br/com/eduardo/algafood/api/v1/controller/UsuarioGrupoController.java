@@ -16,6 +16,7 @@ import br.com.eduardo.algafood.api.v1.AlgaLinks;
 import br.com.eduardo.algafood.api.v1.assembler.GrupoModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.GrupoDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import br.com.eduardo.algafood.core.security.AlgaSecurity;
 import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Usuario;
 import br.com.eduardo.algafood.domain.service.CadastroUsuarioService;
@@ -33,21 +34,27 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 	@Autowired
 	private CadastroUsuarioService cadastroUsuarioService;
 
+	@Autowired
+	private AlgaSecurity algaSecurity;
+
 	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@Override
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
 		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
-
+    
 		CollectionModel<GrupoDTO> gruposModel = grupoAssembler.toCollectionModel(usuario.getGrupos())
-				.removeLinks()
-				.add(algaLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
-
-		gruposModel.getContent().forEach(grupoModel -> {
-			grupoModel.add(algaLinks.linkToUsuarioGrupoDesassociacao(
-					usuarioId, grupoModel.getId(), "desassociar"));
-		});
-
+				.removeLinks();
+		
+		if (algaSecurity.podeEditarUsuariosGruposPermissoes()) {
+			gruposModel.add(algaLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
+			
+			gruposModel.getContent().forEach(grupoModel -> {
+				grupoModel.add(algaLinks.linkToUsuarioGrupoDesassociacao(
+						usuarioId, grupoModel.getId(), "desassociar"));
+			});
+		}
+		
 		return gruposModel;
 	}
 

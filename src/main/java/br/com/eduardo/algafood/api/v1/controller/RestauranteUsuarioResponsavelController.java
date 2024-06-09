@@ -17,6 +17,7 @@ import br.com.eduardo.algafood.api.v1.AlgaLinks;
 import br.com.eduardo.algafood.api.v1.assembler.UsuarioModelAssembler;
 import br.com.eduardo.algafood.api.v1.model.UsuarioDTO;
 import br.com.eduardo.algafood.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
+import br.com.eduardo.algafood.core.security.AlgaSecurity;
 import br.com.eduardo.algafood.core.security.CheckSecurity;
 import br.com.eduardo.algafood.domain.model.Restaurante;
 import br.com.eduardo.algafood.domain.service.CadastroRestauranteService;
@@ -34,20 +35,27 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 	@Autowired
 	private AlgaLinks algaLinks;
 
+	@Autowired
+	private AlgaSecurity algaSecurity;
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public CollectionModel<UsuarioDTO> listarUsuariosResponsaveis(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
 		CollectionModel<UsuarioDTO> usuariosModel = usuarioAssembler
 				.toCollectionModel(restaurante.getUsuariosResponsaveis())
-				.removeLinks()
-				.add(algaLinks.linkToRestauranteResponsaveis(restauranteId))
-				.add(algaLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
+				.removeLinks();
 
-		usuariosModel.getContent().stream().forEach(usuarioModel -> {
-			usuarioModel.add(algaLinks.linkToRestauranteResponsavelDesassociacao(
-					restauranteId, usuarioModel.getId(), "desassociar"));
-		});
+		usuariosModel.add(algaLinks.linkToRestauranteResponsaveis(restauranteId));
+
+		if (algaSecurity.podeGerenciarCadastroRestaurantes()) {
+			usuariosModel.add(algaLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
+
+			usuariosModel.getContent().stream().forEach(usuarioModel -> {
+				usuarioModel.add(algaLinks.linkToRestauranteResponsavelDesassociacao(
+						restauranteId, usuarioModel.getId(), "desassociar"));
+			});
+		}
 
 		return usuariosModel;
 	}
