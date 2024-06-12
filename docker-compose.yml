@@ -24,3 +24,13 @@ services:
     env_file: .env
     depends_on:
       - algafood-mysql
+    
+  algafood-proxy:
+    build: ./nginx
+    image: algafood-proxy
+    ports:
+      - "80:80"
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-api
