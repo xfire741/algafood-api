@@ -1,0 +1,27 @@
+version: '3.9'
+
+networks:
+  algafood-network:
+    driver: bridge
+
+services:
+  algafood-mysql:
+    image: mysql:8.0
+    ports:
+      - "3316:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - algafood-network
+
+  algafood-api:
+    image: algafood-api
+    environment:
+      DB_HOST: algafood-mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - algafood-network
+    env_file: .env
+    depends_on:
+      - algafood-mysql
