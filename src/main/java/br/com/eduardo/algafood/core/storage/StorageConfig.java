@@ -3,6 +3,7 @@ package br.com.eduardo.algafood.core.storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -21,6 +22,7 @@ public class StorageConfig {
 	private StorageProperties storageProperties;
 	
 	@Bean
+	@Profile("prod")
 	public AmazonS3 amazonS3() {
 		var credentials = new BasicAWSCredentials(storageProperties.getS3().getIdChaveAcesso(),
 				storageProperties.getS3().getChaveAcessoSecreta());

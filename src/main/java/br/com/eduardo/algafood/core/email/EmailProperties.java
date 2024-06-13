@@ -1,7 +1,5 @@
 package br.com.eduardo.algafood.core.email;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +18,6 @@ public class EmailProperties {
 	
 	private Implementacao impl = Implementacao.FAKE;
 
-	@NotNull
 	private String remetente;
 	
 	public enum Implementacao {
